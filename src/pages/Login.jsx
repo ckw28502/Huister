@@ -3,15 +3,18 @@ import {
   MDBContainer,
   MDBRow,
   MDBCol,
-  MDBInput
+  MDBInput,
+  MDBCheckbox
 }
 from 'mdb-react-ui-kit';
 import InputPassword from '../components/InputPassword';
 import Banner from './Banner';
 import Logo from './Logo';
 import './LoginRegister.css'
+import { useState } from 'react';
 
 function Login() {
+  const[termsConditions,setTermsConditions]=useState(false);
   return (
     <MDBContainer fluid>
       <MDBRow>
@@ -25,9 +28,13 @@ function Login() {
             <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Username' id='loginUsername' type='text' size="lg"/>
             <InputPassword id="loginPassword" label="Password"/>
 
+            <MDBCheckbox id='t&c_Checkbox'label={<a href="">Terms and Conditions</a>} 
+            wrapperClass='d-flex justify-content-center ps-6' onChange={()=>setTermsConditions(!termsConditions)}/>
+
             <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg' type='submit'>Login</MDBBtn>
 
-            <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="/forgot">Forgot password?</a></p>
+            <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="/forgot" onClick={}>Forgot password?</a></p>
+            
             <p className='ms-5'>Don't have an account? <a href="/register" className="link-info">Register here</a></p>
 
           </div>
