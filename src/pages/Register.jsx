@@ -21,12 +21,12 @@ function Register() {
 
             <h3 className="fw-normal mb-2 ps-5 pb-3" style={{letterSpacing: '1px'}}>Register</h3>
 
-            <form method='post' className="ml-5"> 
             <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Username' id='registerUsername' type='text' size="lg"/>
             <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Email Address' id='registerEmailAddress' type='text' size="lg"/>
             <MDBInput wrapperClass='mb-4 mx-5 w-100' label='name' id='registerName' type='text' size="lg"/>
             <InputPassword id="registerPassword" label="Password"/>
             <InputPassword id="registerConfirmationPassword" label="Confirmation Password"/>
+            <form method='post' className="ml-5"> 
             <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg'>Register</MDBBtn>
             </form>
             <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="#!">Forgot password?</a></p>
