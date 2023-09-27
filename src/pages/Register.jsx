@@ -9,6 +9,7 @@ from 'mdb-react-ui-kit';
 import InputPassword from '../components/InputPassword';
 import Banner from './Banner';
 import Logo from './Logo';
+import './LoginRegister.css'
 
 function Register() {
   return (
@@ -26,10 +27,8 @@ function Register() {
             <MDBInput wrapperClass='mb-4 mx-5 w-100' label='name' id='registerName' type='text' size="lg"/>
             <InputPassword id="registerPassword" label="Password"/>
             <InputPassword id="registerConfirmationPassword" label="Confirmation Password"/>
-            <form method='post' className="ml-5"> 
             <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg'>Register</MDBBtn>
-            </form>
-            <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="#!">Forgot password?</a></p>
+                        
             <p className='ms-5'>Already have an account? <a href="/login" className="link-info">Log in here</a></p>
 
           </div>
