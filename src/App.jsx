@@ -1,17 +1,13 @@
 import './App.css'
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
+import LoginRegisterTemplate from "./pages/LoginRegister/LoginRegisterTemplate";
 
 function App() {
   return(
     <div className="app">
       <Router>
         <Routes>
-          <Route path='/login' element={<Login />}/>
-          <Route path='/register' element={<Register />}/>
-          <Route path='/forgot' element={<ForgotPassword/>}/>
+          <Route path='/' element={<LoginRegisterTemplate />}/>
         </Routes>
       </Router>
     </div>
