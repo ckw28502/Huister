@@ -7,7 +7,7 @@ import {
   import Banner from './Banner';
   import Logo from './Logo';
   import './LoginRegister.css'
-  import { useEffect, useRef, useState } from 'react';
+  import { useState } from 'react';
   import Register from './Register';
   import Login from "./Login";
   import ForgotPassword from './ForgotPassword';
@@ -54,7 +54,7 @@ import {
   
             <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
   
-              <h3 className="fw-normal mb-2 ps-5 ms-3 pb-3" style={{letterSpacing: '1px'}}>{currentPage}</h3>
+              <h3 className="fw-normal align-self-center mb-2 ps-5 ms-3 pb-3" style={{letterSpacing: '1px'}}>{currentPage}</h3>
   
               {component}
   
@@ -62,7 +62,7 @@ import {
   
           </MDBCol>
   
-          <Banner/>
+          <Banner page={currentPage}/>
   
         </MDBRow>
   
