@@ -12,7 +12,7 @@ function forgotPassword(props) {
     
         <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg' type='submit'><FaEnvelope size={'28px'}/></MDBBtn>
     
-        <p className='ms-5'>Remember the password? <u onClick={props.backToLogin} className="link-info">Back to login</u></p>
+        <p className='ms-5 align-self-center ps-5'>Remember the password? <u onClick={props.backToLogin} className="link-info">Back to login</u></p>
     
       </>
       );    

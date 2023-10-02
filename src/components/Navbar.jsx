@@ -54,8 +54,11 @@ export default function Navbar(props) {
   return (
     <MDBNavbar expand='lg' light bgColor='light'>
       <MDBContainer fluid>
-        <MDBNavbarBrand href='#' className='ps-3'><img className='w-25' src={Logo} alt="Huister Logo" /></MDBNavbarBrand>
+        <MDBNavbarBrand href='#' style={{width:'10%'}}><img className='img-fluid me-5' src={Logo} alt="Huister Logo" />
 
+        
+        </MDBNavbarBrand>
+        
         <MDBNavbarToggler
           aria-controls='navbarSupportedContent'
           aria-expanded='false'
@@ -70,6 +73,7 @@ export default function Navbar(props) {
             {mappedItems}
           </MDBNavbarNav>
         </MDBCollapse>
+        
       </MDBContainer>
     </MDBNavbar>
   );

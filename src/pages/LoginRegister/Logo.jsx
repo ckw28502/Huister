@@ -1,7 +1,7 @@
 import logo from "../../images/logo.png"  
   function Logo() {
     return (
-            <div className='d-flex flex-row ps-5 pt-5 ms-4'>
+            <div className='d-flex justify-content-center flex-row pt-5 pe-5 me-5'>
               <img src={logo} alt="Huister Logo"/>
             </div>
     );
