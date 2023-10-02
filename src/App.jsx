@@ -1,7 +1,7 @@
 //import './App.css'
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import LoginRegisterTemplate from "./pages/LoginRegister/LoginRegisterTemplate";
-import UserTemplate from './pages/User/UserTemplate';
+import AdminTemplate from './pages/admin/AdminTemplate';
 
 function App() {
   return(
@@ -9,7 +9,7 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<LoginRegisterTemplate />}/>
-          <Route path='/admin' element={<UserTemplate />}/>
+          <Route path='/admin' element={<AdminTemplate userRole='admin'/>}/>
         </Routes>
       </Router>
     </div>

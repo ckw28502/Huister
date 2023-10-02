@@ -47,6 +47,7 @@ export default function Navbar(props) {
     })
     setItems(newItems)
     setMappedItems(newItems.map((newItem)=><NavbarItem key={newItem.name} changePage={changePage} label={newItem.name} active={newItem.active}/>))
+    props.switchPage(name);
   }
   let [mappedItems,setMappedItems]=useState(items.map((item)=>{
     return <NavbarItem key={item.name} label={item.name} changePage={changePage} active={item.active}/>
