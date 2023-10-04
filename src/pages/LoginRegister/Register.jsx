@@ -20,7 +20,8 @@ function Register(props) {
     email:'',
     password:'',
     name:'',
-    ConfirmationPassword:''
+    ConfirmationPassword:'',
+    phoneNumber:''
   })
   const [passwordRequirements,setPasswordRequirements]=useState([
     {
@@ -66,7 +67,7 @@ const updateFormData=(event)=>{
     checkedRequirements[2].correct=(value.toUpperCase()!=value)
     checkedRequirements[3].correct=/\d/.test(value)
     checkedRequirements[4].correct=/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(value)
-    const message=(checkedRequirements.filter((requirement)=>requirement.correct).length<checkedRequirements.length)?'Not all fullfiled':'';
+    const message=(checkedRequirements.filter((requirement)=>requirement.correct).length<checkedRequirements.length)?'Not all of the requirements are fullfiled':'';
     e.target.setCustomValidity(message)
     setPasswordRequirements(checkedRequirements)
     updateFormData(e)
@@ -81,6 +82,15 @@ const updateFormData=(event)=>{
     updateFormData(e)
   }
 
+  const phoneNumberChecker=(e)=>{
+    let message='Invalid Dutch phone number'
+    if (/^((\+|00(\s|\s?\-\s?)?)31(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[1-9]((\s|\s?\-\s?)?[0-9])((\s|\s?-\s?)?[0-9])((\s|\s?-\s?)?[0-9])\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]$/.test(e.target.value)) {
+        message=''
+    }
+    e.target.setCustomValidity(message)
+    updateFormData(e);
+  }
+
   const [showRequirements,setShowRequirements]=useState(false)
   const requirementClasses=`bg-dark text-light rounded ms-5 fluid ${(showRequirements)?'':'d-none'}`
   const [confirmationPasswordErrorMessage,setConfirmationPasswordErrorMessage]=useState('');
@@ -90,36 +100,41 @@ const updateFormData=(event)=>{
 
   }
   return (
-    <MDBValidation>
-      <MDBValidationItem invalid feedback={(formData.username.length<1)?'Username cannot be empty!':'Username has been taken!'}>
-        <MDBInput wrapperClass='mb-5 mx-5 w-100'name='username' required label='Username' onChange={updateFormData} id='registerUsername' type='text' size="lg"/>
-      </MDBValidationItem>
-      <MDBValidationItem invalid feedback={(formData.email.length<1)?'Email cannot be empty!':'Invalid email!'}>
-        <MDBInput wrapperClass='mb-5 mx-5 w-100' name='email' onChange={updateFormData} label='Email Address' id='registerEmailAddress' type='email' required size="lg"/>
-      </MDBValidationItem>
-      <MDBValidationItem invalid feedback='Name cannot be empty!'>
-        <MDBInput wrapperClass='mb-5 mx-5 w-100' required label='Name' name='name'onChange={updateFormData} id='registerName' type='text' size="lg"/>
-      </MDBValidationItem>
-      <MDBValidationItem invalid feedback=''>
-        <InputPassword id="registerPassword" toggleRequirements={()=>setShowRequirements(!showRequirements)} name="password" label="Password" getValue={passwordChecker}/>
-      </MDBValidationItem>
-      <div className={requirementClasses}>
-        <ul style={{listStyleType:'none'}}>
-          {passwordRequirementsMapped}
-        </ul>
-      </div>
-      <MDBValidationItem className='mb-5 pb-5'invalid feedback='Confirmation password has to be equals to password!'>
-        <InputPassword id="registerConfirmationPassword" name="confirmationPassword" label="Confirmation Password" getValue={confirmationPasswordChecker} />
-      </MDBValidationItem>
-      <MDBValidationItem invalid feedback='Terms and conditions have to be accepted!'>
-        <MDBCheckbox required onClick={()=>setModal(!modal)} id='t&c_Checkbox'label={<u className='text-info'>Terms & Conditions</u>} 
-            wrapperClass='d-flex justify-content-start ms-5 mt-1 mb-4' checked={termsConditions}/>
-      </MDBValidationItem>
-      <MDBBtn className="mb-4 px-5 mx-5 w-100" color='success' size='lg'>Register</MDBBtn>
-                        
-      <p className='ms-5 ps-5 align-self-center'>Already have an account? <u onClick={props.backToLogin} className="link-info">Log in here</u></p>
+    <>
+      <MDBValidation>
+        <MDBValidationItem invalid feedback={(formData.username.length<1)?'Username cannot be empty!':'Username has been taken!'}>
+          <MDBInput wrapperClass='mb-5 mx-5 w-100'name='username' required label='Username' onChange={updateFormData} id='registerUsername' type='text' size="lg"/>
+        </MDBValidationItem>
+        <MDBValidationItem invalid feedback={(formData.email.length<1)?'Email cannot be empty!':'Invalid email!'}>
+          <MDBInput wrapperClass='mb-5 mx-5 w-100' name='email' onChange={updateFormData} label='Email Address' id='registerEmailAddress' type='email' required size="lg"/>
+        </MDBValidationItem>
+        <MDBValidationItem invalid feedback='Name cannot be empty!'>
+          <MDBInput wrapperClass='mb-5 mx-5 w-100' required label='Name' name='name'onChange={updateFormData} id='registerName' type='text' size="lg"/>
+        </MDBValidationItem>
+        <MDBValidationItem invalid feedback={(formData.phoneNumber.length<1)?'Phone number must be inputted!':'Invalid Dutch phone number!'}>
+          <MDBInput wrapperClass='mb-5 mx-5 w-100' required label='Phone Number' name='phoneNumber' onChange={e=>phoneNumberChecker(e)} id='registerName' type='text' size="lg"/>
+        </MDBValidationItem>
+        <MDBValidationItem invalid feedback=''>
+          <InputPassword id="registerPassword" toggleRequirements={()=>setShowRequirements(true)} name="password" label="Password" getValue={passwordChecker}/>
+        </MDBValidationItem>
+        <div className={requirementClasses}>
+          <ul style={{listStyleType:'none'}}>
+            {passwordRequirementsMapped}
+          </ul>
+        </div>
+        <MDBValidationItem className='mb-5 pb-5'invalid feedback='Confirmation password has to be equals to password!'>
+          <InputPassword id="registerConfirmationPassword" name="confirmationPassword" label="Confirmation Password" getValue={confirmationPasswordChecker} />
+        </MDBValidationItem>
+        <MDBValidationItem invalid feedback='Terms and conditions have to be accepted!'>
+          <MDBCheckbox required onClick={()=>setModal(!modal)} id='t&c_Checkbox'label={<u className='text-info'>Terms & Conditions</u>} 
+              wrapperClass='d-flex justify-content-start ms-5 mt-1 mb-4' checked={termsConditions}/>
+        </MDBValidationItem>
+        <MDBBtn className="mb-4 px-5 mx-5 w-100" color='success' size='lg'>Register</MDBBtn>
+                          
+        <p className='ms-5 ps-5 d-flex justify-content-center'>Already have an account? <u onClick={props.backToLogin} className="link-info">Log in here</u></p>
+      </MDBValidation>
       <Modal scrollable title='Terms & Conditions' body={<TermsAndConditions/>} modal={modal} toggleModal={toggleModal} button1='REJECT' button2='ACCEPT'/>
-    </MDBValidation>
+    </>
   );
 }
 

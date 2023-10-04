@@ -8,7 +8,7 @@ import {
   MDBNavbarNav,
   MDBCollapse,
 } from 'mdb-react-ui-kit';
-import Logo from '../images/logo.png';
+import Logo from '../assets/logo.png';
 import NavbarItem from './NavbarItem';
 
 export default function Navbar(props) {
