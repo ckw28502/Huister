@@ -1,16 +1,15 @@
-import './App.css'
+//import './App.css'
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import Login from './pages/Login';
-import Register from './pages/Register';
-
+import LoginRegisterTemplate from "./pages/LoginRegister/LoginRegisterTemplate";
+import AdminTemplate from './pages/admin/AdminTemplate';
 
 function App() {
   return(
     <div className="app">
       <Router>
         <Routes>
-          <Route path='/login' element={<Login />}/>
-          <Route path='/register' element={<Register />}/>
+          <Route path='/' element={<LoginRegisterTemplate />}/>
+          <Route path='/admin' element={<AdminTemplate userRole='admin'/>}/>
         </Routes>
       </Router>
     </div>
