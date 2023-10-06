@@ -3,8 +3,7 @@ import {
   MDBInput,
   MDBCheckbox,
   MDBValidation,
-  MDBValidationItem,
-  
+  MDBValidationItem,  
 }
 from 'mdb-react-ui-kit';
 import InputPassword from '../../components/InputPassword';
@@ -13,6 +12,7 @@ import { useState } from 'react';
 import Modal from '../../components/Modal';
 import TermsAndConditions from './TermAndConditions';
 import { FaX,FaCheck } from 'react-icons/fa6';
+import InputFile from '../../components/InputFile';
 
 function Register(props) {
   const [formData,setFormData]=useState({
@@ -21,7 +21,8 @@ function Register(props) {
     password:'',
     name:'',
     ConfirmationPassword:'',
-    phoneNumber:''
+    phoneNumber:'',
+    profilePicture:''
   })
   const [passwordRequirements,setPasswordRequirements]=useState([
     {
@@ -53,6 +54,7 @@ const updateFormData=(event)=>{
 }
 
   const[termsConditions,setTermsConditions]=useState(false);
+  
   const [modal,setModal]=useState(false);
   const toggleModal=(isAccepted)=>{
     setModal(!modal);
@@ -101,7 +103,10 @@ const updateFormData=(event)=>{
   }
   return (
     <>
-      <MDBValidation>
+      <MDBValidation encType='multipart/form-data'>
+        <MDBValidationItem>
+          <InputFile getValue={updateFormData}/>
+        </MDBValidationItem>
         <MDBValidationItem invalid feedback={(formData.username.length<1)?'Username cannot be empty!':'Username has been taken!'}>
           <MDBInput wrapperClass='mb-5 mx-5 w-100'name='username' required label='Username' onChange={updateFormData} id='registerUsername' type='text' size="lg"/>
         </MDBValidationItem>
@@ -112,7 +117,7 @@ const updateFormData=(event)=>{
           <MDBInput wrapperClass='mb-5 mx-5 w-100' required label='Name' name='name'onChange={updateFormData} id='registerName' type='text' size="lg"/>
         </MDBValidationItem>
         <MDBValidationItem invalid feedback={(formData.phoneNumber.length<1)?'Phone number must be inputted!':'Invalid Dutch phone number!'}>
-          <MDBInput wrapperClass='mb-5 mx-5 w-100' required label='Phone Number' name='phoneNumber' onChange={e=>phoneNumberChecker(e)} id='registerName' type='text' size="lg"/>
+          <MDBInput wrapperClass='mb-5 mx-5 w-100' required label='Phone Number' name='phoneNumber' onChange={e=>phoneNumberChecker(e)} id='registerPhoneNumber' type='text' size="lg"/>
         </MDBValidationItem>
         <MDBValidationItem invalid feedback=''>
           <InputPassword id="registerPassword" toggleRequirements={()=>setShowRequirements(true)} name="password" label="Password" getValue={passwordChecker}/>
