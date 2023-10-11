@@ -15,7 +15,7 @@ export default function Navbar(props) {
   const [showBasic, setShowBasic] = useState(false);
   let items;
   let setItems;
-  if (props.userRole=='admin') {
+  if (JSON.parse(sessionStorage.getItem("user")).role=='ADMIN') {
     [items,setItems]=useState([
         {
             name:'Dashboard',
