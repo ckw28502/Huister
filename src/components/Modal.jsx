@@ -41,7 +41,7 @@ function Modal(props) {
               <MDBBtn color='danger' onClick={toggleModal}>
                 {props.button1}
               </MDBBtn>
-              <MDBBtn onClick={Accept}>{props.button2}</MDBBtn>
+              {(props.button2)?(<MDBBtn onClick={Accept}>{props.button2}</MDBBtn>):(<></>)}
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>

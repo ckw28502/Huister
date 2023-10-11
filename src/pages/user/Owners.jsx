@@ -3,6 +3,8 @@ import UserServices from '../../services/UserServices'
 import { MDBListGroup,MDBInput, MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit'
 import UserListItem from '../../components/UserListItem'
 import Select from 'react-select'
+import UserDetail from './UserDetail'
+import Modal from '../../components/Modal'
 
 
 export default function Owners(){
@@ -11,7 +13,16 @@ export default function Owners(){
     const [showedOwnerList,setShowedOwnerList]=useState([])
 
     const [search,setSearch]=useState('')
+    
+    const [userId,setUserId]=useState(undefined)
 
+    const [modal,setModal]=useState(false);
+
+    const toggleModal=(id)=>{
+        setUserId(id)
+        console.log(id);
+        setModal(!modal);
+    }
     
     const options=[
         {label:"Name",value:"name"},
@@ -101,7 +112,7 @@ export default function Owners(){
         }else{
             filteredOwnerList=newOwnerList
         }
-        setShowedOwnerList(filteredOwnerList.map(owner=><UserListItem key={owner.id} owner={owner}/>))
+        setShowedOwnerList(filteredOwnerList.map(owner=><UserListItem toggleModal={toggleModal} key={owner.id} owner={owner}/>))
         setOwnerList(newOwnerList)
     },[ownerList,search,sort,ascendingSort])
     return(
@@ -121,6 +132,8 @@ export default function Owners(){
                     {showedOwnerList}
                 </MDBListGroup>
             </MDBRow>
+
+            <Modal scrollable title='User Details' body={<UserDetail userId={userId}/>} modal={modal} toggleModal={toggleModal} button1='CLOSE'/>
             
         </MDBContainer>
     )

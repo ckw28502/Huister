@@ -11,6 +11,11 @@ async function Login(formData){
     return response.data
 }
 
+function getUser(id){
+    return axios.get(`${hostName}/${id}`)
+    .then(response=>response.data)
+}
+
 function getAllOwners() {
     return axios.get(`${hostName}/owners`)
     .then(response=>response.data)
@@ -19,5 +24,6 @@ function getAllOwners() {
 export default {
     saveUser,
     Login,
-    getAllOwners
+    getAllOwners,
+    getUser
 }

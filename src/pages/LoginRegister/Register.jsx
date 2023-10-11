@@ -16,6 +16,7 @@ import { FaX,FaCheck } from 'react-icons/fa6';
 import InputFile from '../../components/InputFile';
 import userservices from '../../services/UserServices';
 import FirebaseServices from '../../services/FirebaseServices';
+import ToastServices from '../../services/ToastServices';
 
 function Register(props) {
 
@@ -25,7 +26,7 @@ function Register(props) {
     email:'',
     password:'',
     name:'',
-    ConfirmationPassword:'',
+    confirmationPassword:'',
     phoneNumber:'',
     profilePicture:null,
     role:'',
@@ -96,13 +97,16 @@ function Register(props) {
     if (message!=confirmationPasswordErrorMessage) {
       setConfirmationPasswordErrorMessage(message)
     }
+    console.log(e.target.name);
     updateFormData(e)
   }
+
+  const phoneNumberRegex=/^((\+|00(\s|\s?\-\s?)?)31(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[1-9]((\s|\s?\-\s?)?[0-9])((\s|\s?-\s?)?[0-9])((\s|\s?-\s?)?[0-9])\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]$/
 
   //phone number checker
   const phoneNumberChecker=(e)=>{
     let message='Invalid Dutch phone number'
-    if (/^((\+|00(\s|\s?\-\s?)?)31(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[1-9]((\s|\s?\-\s?)?[0-9])((\s|\s?-\s?)?[0-9])((\s|\s?-\s?)?[0-9])\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]$/.test(e.target.value)) {
+    if (phoneNumberRegex.test(e.target.value)) {
         message=''
     }
     e.target.setCustomValidity(message)
@@ -119,14 +123,42 @@ function Register(props) {
 
   //map password requirement
   const passwordRequirementsMapped=passwordRequirements.map((requirement,index)=><li key={index}>{(requirement.correct)?<FaCheck color='green'/>:<FaX color='red'/>} {requirement.requirement}</li>)
+
+
+  //convert error messages
+  const convertErrorMessage=(message)=>{
+
+    switch (message) {
+
+      case "USERNAME_EXISTS":
+        return "This username has been taken"
+      default:
+        return "Server Errors!"
+    }
+  }
   
   //handling register event 
   const handleRegister=event=>{
     event.preventDefault()
+    const passwordfailed=passwordRequirements.some(passwordRequirement=>passwordRequirement.correct==false)
 
-    FirebaseServices.uploadImage(formData.profilePicture,`user/${formData.username}`)
-    .then(imageUrl=>setFormData({...formData,profilePictureUrl:imageUrl}))
-    .then(userservices.saveUser(formData))
+    if(!phoneNumberRegex.test(formData.phoneNumber)){
+      ToastServices.Error("Phone number is not a valid dutch phone number!")
+    }else if (passwordfailed) {
+      ToastServices.Error("Password requirements haven't been fulfilled!")
+    }else if (formData.password!=formData.confirmationPassword){
+
+      ToastServices.Error("Confirmation Password is not equals to the password!")
+    }else{
+      FirebaseServices.uploadImage(formData.profilePicture,`user/${formData.username}`)
+      .then(fullPath=>setFormData({...formData,profilePictureUrl:fullPath}))
+      userservices.saveUser(formData)
+      .catch(error=>{
+        const errorMessages=error.response.data.errors
+        console.log(errorMessages);
+        errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
+      })
+    }
   }
   return (
     <>
@@ -168,7 +200,7 @@ function Register(props) {
         </MDBValidationItem>
         </div>
 
-        {/** Password input */}
+        {/** Password in  put */}
         <MDBValidationItem invalid feedback=''>
           <InputPassword id="registerPassword" toggleRequirements={()=>setShowRequirements(true)} name="password" label="Password" getValue={passwordChecker}/>
         </MDBValidationItem>

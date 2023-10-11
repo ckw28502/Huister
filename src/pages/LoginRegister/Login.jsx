@@ -7,8 +7,6 @@ import InputPassword from '../../components/InputPassword';
 import { useState } from 'react';
 import './loginregister.css';
 import userservices from '../../services/UserServices';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ToastServices from '../../services/ToastServices';
 
 
@@ -47,7 +45,6 @@ function Login(props) {
       }
     }).catch((error)=>{
       const errorMessages=error.response.data.errors
-      console.log(errorMessages);
       errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
     })
 

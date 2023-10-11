@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,14 +16,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+const storage=getStorage()
 
 function uploadImage(image,filePath) {
-    const storage=getStorage()
     const storageRef=ref(storage,`images/${filePath}`)
     return uploadBytes(storageRef,image)
-    .then((snapShot)=>snapShot.metadata.fullPath)
-    
+    .then((snapShot)=>getDownloadURL(snapShot.ref))
 }
+
 
 export default {
     firebaseApp,
