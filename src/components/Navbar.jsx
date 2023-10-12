@@ -7,15 +7,19 @@ import {
   MDBIcon,
   MDBNavbarNav,
   MDBCollapse,
+  MDBCol,
 } from 'mdb-react-ui-kit';
 import Logo from '../assets/logo.png';
 import NavbarItem from './NavbarItem';
+import { FaSignOutAlt } from 'react-icons/fa';
+import clickable from '../pages/clickable.module.css'
 
 export default function Navbar(props) {
   const [showBasic, setShowBasic] = useState(false);
   let items;
   let setItems;
-  if (JSON.parse(sessionStorage.getItem("user")).role=='ADMIN') {
+  const user=JSON.parse(sessionStorage.getItem("user"))
+  if (user.role=='ADMIN') {
     [items,setItems]=useState([
         {
             name:'Dashboard',
@@ -38,6 +42,11 @@ export default function Navbar(props) {
             active:false
         }
       ])
+  }
+
+  const LogOut=()=>{
+    sessionStorage.clear();
+    window.location.href="/";
   }
 
   const changePage=(name)=>{
@@ -70,10 +79,19 @@ export default function Navbar(props) {
         </MDBNavbarToggler>
 
         <MDBCollapse navbar show={showBasic}>
-          <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
-            {mappedItems}
-          </MDBNavbarNav>
+          <MDBCol md="10">
+            <MDBNavbarNav className='mr-auto mb-2 mb-lg-0'>
+              {mappedItems}
+            </MDBNavbarNav>
+          </MDBCol>
+          <MDBCol md="1" className='d-flex pe-3 m=lg-s-3 me-4'>
+          {(user.role!="ADMIN")?<img src={user.profilePictureUrl} style={{maxHeight:"50px",maxWidth:"50px"}} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
+          </MDBCol>
+          <MDBCol md="1" >
+            <FaSignOutAlt className={clickable.clickablePointer} onClick={LogOut} size={28}/>
+          </MDBCol>
         </MDBCollapse>
+
         
       </MDBContainer>
     </MDBNavbar>

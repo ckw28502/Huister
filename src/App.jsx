@@ -11,6 +11,8 @@ function App() {
         <Routes>
           <Route path='/' element={<LoginRegisterTemplate />}/>
           <Route path='/admin' element={<UserTemplate/>}/>
+          <Route path='/owner' element={<UserTemplate/>}/>
+          <Route path='/customer' element={<UserTemplate/>}/>
         </Routes>
       </Router>
       <ToastContainer/>
