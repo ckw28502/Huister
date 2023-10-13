@@ -7,6 +7,12 @@ function getAllProperties(id) {
     .then(response=>response.data)
 }
 
+function getRentedNotRentedRatio(id) {
+     return axios.get(`${hostName}/dashboard/rentedRatio/${id}`)
+    .then(response=>response.data)
+}
+
 export default {
-    getAllProperties
+    getAllProperties,
+    getRentedNotRentedRatio
 }
