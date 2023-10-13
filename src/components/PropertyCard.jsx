@@ -13,7 +13,7 @@ export default function PropertyCard(props) {
     }
 
     return(
-        <MDBCard style={{ maxWidth: '540px' }} className="d-flex flex-column">
+        <MDBCard style={{ maxWidth: '540px' }} className="d-flex flex-column mx-5 my-3">
             <MDBRow className='g-0'>
                 <MDBCol md='4'>
                 <MDBCardImage className="h-100 w-100" src={props.property.imageUrl} alt='...' fluid />
@@ -22,7 +22,7 @@ export default function PropertyCard(props) {
                 <MDBCardBody>
                     <MDBCardTitle >{props.property.cityName}</MDBCardTitle>
                     <MDBCardText>{props.property.streetName}</MDBCardText>
-                    <MDBCardText><FaEuroSign className="mb-1"/>{props.property.price}</MDBCardText>
+                    <MDBCardText><FaEuroSign className="mb-1"/>{props.property.price}/month</MDBCardText>
                     <MDBCardText>
                     <small className='text-muted'>{props.property.area} m<sup>2</sup></small>
                     </MDBCardText>

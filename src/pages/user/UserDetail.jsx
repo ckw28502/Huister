@@ -16,7 +16,7 @@ export default function UserDetails(props){
     })
 
     useEffect(()=>{
-        if (props.userId!==undefined) {
+        if (props.userId!=false) {
             UserServices.getUser(props.userId)
             .then(userData=>setUser(userData))
         }

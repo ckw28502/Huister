@@ -20,7 +20,6 @@ export default function Owners(){
 
     const toggleModal=(id)=>{
         setUserId(id)
-        console.log(id);
         setModal(!modal);
     }
     

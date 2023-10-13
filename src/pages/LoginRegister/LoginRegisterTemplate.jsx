@@ -14,6 +14,22 @@ import {
   import './template.css';
 
   function App() {
+    const userJSON=sessionStorage.getItem("user")
+    if (userJSON!==null) {
+        switch (JSON.parse(userJSON).role) {
+          case "ADMIN":
+            window.location.href="/admin"
+            break;
+            case "OWNER":
+              window.location.href="/owner"
+              break;
+          case "CUSTOMER":
+            window.location.href="/customer"
+            break;
+          default:
+            break;
+        }
+    }
     const changePage=(page)=>{
         setCurrentPage(page)
     }
@@ -43,7 +59,7 @@ import {
         case pages.forgotPassword:
             component=<ForgotPassword backToLogin={backToLogin}/>
             break;
-        default:
+        default:  
             break;
     }
     return (

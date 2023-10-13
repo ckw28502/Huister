@@ -8,6 +8,9 @@ import CustomerDashboard from "./CustomerDashboard";
 
 export default function UserTemplate(){
     const [currentPage,setCurrentPage]=useState('Dashboard');
+    if (sessionStorage.getItem("user")===null) {
+        window.location.href="/"
+    }
     const user=useState(JSON.parse(sessionStorage.getItem('user')))[0]
     const switchPage=(page)=>{
         setCurrentPage(page)
