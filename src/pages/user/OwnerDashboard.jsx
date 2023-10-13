@@ -33,7 +33,6 @@ export default function OwnerDashboard(){
             borderWidth:1
         }
         doughnutRentedRatio=<Doughnut data={data}/>
-       console.log(doughnutRentedRatio);
     }
     return(
         <>
