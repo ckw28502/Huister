@@ -1,7 +1,8 @@
 //import './App.css'
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import LoginRegisterTemplate from "./pages/LoginRegister/LoginRegisterTemplate";
-import AdminTemplate from './pages/admin/AdminTemplate';
+import UserTemplate from './pages/user/UserTemplate';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return(
@@ -9,9 +10,12 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<LoginRegisterTemplate />}/>
-          <Route path='/admin' element={<AdminTemplate userRole='admin'/>}/>
+          <Route path='/admin' element={<UserTemplate/>}/>
+          <Route path='/owner' element={<UserTemplate/>}/>
+          <Route path='/customer' element={<UserTemplate/>}/>
         </Routes>
       </Router>
+      <ToastContainer/>
     </div>
   )
 }

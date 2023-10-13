@@ -6,6 +6,7 @@ export default function InputFile(props){
     const [profilePicture,setProfilePicture]=useState(defaultProfilePicture)
     const changeImage=(e)=>{
         setProfilePicture(URL.createObjectURL(e.target.files[0]))
+        console.log(e.target.files[0]);
         props.getValue(e)
     }
     return(
