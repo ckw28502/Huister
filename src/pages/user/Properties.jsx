@@ -154,7 +154,7 @@ export default function Properties(){
                     </MDBRow>
                 </MDBRow>
                 <MDBRow>
-                    {(propertyCards.length>0)?propertyCards:<h1>No Property Found!</h1>}
+                    {(propertyCards.length>0)?propertyCards:<h2>No Property Found!</h2>}
                 </MDBRow>
             </MDBContainer>
             <Modal scrollable title={modalTitle} body={<CreateUpdateProperty mode={modalMode} property={property}/>} modal={modal} toggleModal={toggleModal} button1={(modalMode=="detail")?'CLOSE':'CANCEL'} button2={(modalMode!="detail")?'SAVE':''}/>
