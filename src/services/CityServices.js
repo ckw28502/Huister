@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const hostName="http://localhost:8080/cities"
+const hostName=import.meta.env.VITE_HUISTER_API_URL+"cities"
 
 function getAllCities(userId){
     return axios.get(`${hostName}/${userId}`)

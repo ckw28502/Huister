@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const hostName="http://localhost:8080/properties"
+const hostName=import.meta.env.VITE_HUISTER_API_URL+"properties"
 
 function getAllProperties(id) {
     return axios.get(`${hostName}/${id}`)

@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const hostName='http://localhost:8080/users'
+const hostName=import.meta.env.VITE_HUISTER_API_URL+'users'
 
 function saveUser(formUser) {
     return axios.post(hostName,formUser);
