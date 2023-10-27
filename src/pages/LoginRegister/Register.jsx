@@ -147,8 +147,9 @@ function Register(props) {
     }else if (passwordfailed) {
       ToastServices.Error("Password requirements haven't been fulfilled!")
     }else if (formData.password!=formData.confirmationPassword){
-
       ToastServices.Error("Confirmation Password is not equals to the password!")
+    }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
+      ToastServices.Error("There is an empty field!")
     }else{
       FirebaseServices.uploadImage(formData.profilePicture,`user/${formData.username}`)
       .then(fullPath=>setFormData({...formData,profilePictureUrl:fullPath}))
@@ -200,7 +201,7 @@ function Register(props) {
         </MDBValidationItem>
         </div>
 
-        {/** Password in  put */}
+        {/** Password input */}
         <MDBValidationItem invalid feedback=''>
           <InputPassword id="registerPassword" toggleRequirements={()=>setShowRequirements(true)} name="password" label="Password" getValue={passwordChecker}/>
         </MDBValidationItem>
