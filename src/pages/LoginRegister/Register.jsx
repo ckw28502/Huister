@@ -15,7 +15,6 @@ import TermsAndConditions from './TermAndConditions';
 import { FaX,FaCheck } from 'react-icons/fa6';
 import InputFile from '../../components/InputFile';
 import userservices from '../../services/UserServices';
-import FirebaseServices from '../../services/FirebaseServices';
 import ToastServices from '../../services/ToastServices';
 
 function Register(props) {
@@ -151,9 +150,8 @@ function Register(props) {
     }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
       ToastServices.Error("There is an empty field!")
     }else{
-      FirebaseServices.uploadImage(formData.profilePicture,`user/${formData.username}`)
-      .then(fullPath=>setFormData({...formData,profilePictureUrl:fullPath}))
       userservices.saveUser(formData)
+      .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
       .catch(error=>{
         const errorMessages=error.response.data.errors
         console.log(errorMessages);

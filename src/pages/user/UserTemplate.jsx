@@ -5,6 +5,8 @@ import Properties from './Properties';
 import Owners from './Owners';
 import OwnerDashboard from "./OwnerDashBoard";
 import CustomerDashboard from "./CustomerDashboard";
+import UserDetails from "./UserDetail";
+import UserProfile from "./UserProfile";
 
 export default function UserTemplate(){
     const [currentPage,setCurrentPage]=useState('Dashboard');
@@ -40,6 +42,7 @@ export default function UserTemplate(){
                 setPageObject(<Owners/>)
                 break;
             default:
+                setPageObject(<UserProfile/>)
                 break;
         }
     },[currentPage])    

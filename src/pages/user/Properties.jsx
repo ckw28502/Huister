@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import PropertyServices from "../../services/PropertyServices";
 import Modal from "../../components/Modal";
-import CreateUpdateProperty from "./CreateUpdateProperty";
 import PropertyCard from "../../components/PropertyCard";
 import CityServices from "../../services/CityServices";
 import Select from "react-select";
@@ -115,22 +114,7 @@ export default function Properties(){
     const toggleModal=()=>{
         setModal(!modal);
     }
-    const openModal=(selectedProperty,mode)=>{
-        setProperty(selectedProperty)
-        setModalMode(mode)
-        switch (mode) {
-            case "detail":
-                setModalTitle("Property Details")
-                break;
-            case "create":
-                setModalTitle("Create Property")
-                break;
-            case "edit":
-                setModalTitle("Edit Property")
-                break;
-            default:
-                break;
-        }
+    const openModal=()=>{
         toggleModal()
     }
     
@@ -157,7 +141,7 @@ export default function Properties(){
                     {(propertyCards.length>0)?propertyCards:<h2>No Property Found!</h2>}
                 </MDBRow>
             </MDBContainer>
-            <Modal scrollable title={modalTitle} body={<CreateUpdateProperty mode={modalMode} property={property}/>} modal={modal} toggleModal={toggleModal} button1={(modalMode=="detail")?'CLOSE':'CANCEL'} button2={(modalMode!="detail")?'SAVE':''}/>
+            {/* <Modal scrollable title={modalTitle} body={<CreateUpdateProperty mode={modalMode} property={property}/>} modal={modal} toggleModal={toggleModal} button1={(modalMode=="detail")?'CLOSE':'CANCEL'} button2={(modalMode!="detail")?'SAVE':''}/> */}
         </>
     )
 }
