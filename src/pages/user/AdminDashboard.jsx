@@ -36,10 +36,11 @@ export default function AdminDashboard(){
         <>
             <MDBContainer fluid className="px-5 py-5">
                 <MDBRow>
-                    <MDBCol md='3'>
+                    <MDBCol size='9' lg='5' className="bg-info square rounded bg-opacity-25 p-3 mx-1 align-item-center" >
                         <h5>Rented Property Ratio</h5>
                         {doughnutRentedRatio}
                     </MDBCol>
+                    
                 </MDBRow>
             </MDBContainer>
         </>
