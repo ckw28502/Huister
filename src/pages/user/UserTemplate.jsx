@@ -9,13 +9,13 @@ import UserDetails from "./UserDetail";
 import UserProfile from "./UserProfile";
 
 export default function UserTemplate(){
-    const [currentPage,setCurrentPage]=useState('Dashboard');
+    const [currentPage,setCurrentPage]=useState(sessionStorage.getItem("page"));
     if (sessionStorage.getItem("user")===null) {
         window.location.href="/"
     }
     const user=useState(JSON.parse(sessionStorage.getItem('user')))[0]
-    const switchPage=(page)=>{
-        setCurrentPage(page)
+    const switchPage=()=>{
+        setCurrentPage(sessionStorage.getItem("page"))
     }
     const checkUserRoleForDashboard=()=>{
         switch (user.role) {

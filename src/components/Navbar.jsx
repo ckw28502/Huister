@@ -19,27 +19,28 @@ export default function Navbar(props) {
   let items;
   let setItems;
   const user=JSON.parse(sessionStorage.getItem("user"))
+  const page=sessionStorage.getItem("page")
   if (user.role=='ADMIN') {
     [items,setItems]=useState([
         {
             name:'Dashboard',
-            active:true
+            active:page=='Dashboard'
         },{
             name:'Properties',
-            active:false
+            active:page=='Properties'
         },{
             name:'Owners',
-            active:false
+            active:page=='Owners'
         }
       ])
   } else {
     [items,setItems]=useState([
         {
             name:'Dashboard',
-            active:true
+            active:page=='Dashboard'
         },{
             name:'Properties',
-            active:false
+            active:page=='Properties'
         }
       ])
   }
@@ -51,6 +52,7 @@ export default function Navbar(props) {
 
   const changePage=(name)=>{
     const newItems=items
+    sessionStorage.setItem("page",name )
     newItems.map((item)=>{
         item.active=name==item.name
     })

@@ -26,6 +26,7 @@ function Login(props) {
 
     userservices.Login(formData).then(data=>{
       sessionStorage.setItem("user",JSON.stringify(data))
+      sessionStorage.setItem("page","Dashboard")
       
       switch (data.role) {
 
