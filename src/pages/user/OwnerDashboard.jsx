@@ -10,11 +10,10 @@ export default function OwnerDashboard(){
 
     ChartJS.register(ArcElement, Tooltip, Legend);
 
-    const user=JSON.parse(sessionStorage.getItem("user"))
     const [rentedRatio,setRentedRatio]=useState({rented:0,notRented:0})
 
     useEffect(()=>{
-        PropertyServices.getRentedNotRentedRatio(user.id)
+        PropertyServices.getRentedNotRentedRatio()
         .then(data=>setRentedRatio(data))
     },[])
     let doughnutRentedRatio;

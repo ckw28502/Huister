@@ -21,7 +21,7 @@ export default function UserProfile(){
     const phoneNumberRegex=/^((\+|00(\s|\s?\-\s?)?)31(\s|\s?\-\s?)?(\(0\)[\-\s]?)?|0)[1-9]((\s|\s?\-\s?)?[0-9])((\s|\s?-\s?)?[0-9])((\s|\s?-\s?)?[0-9])\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]\s?[0-9]$/
 
     useEffect(()=>{
-        const id=JSON.parse(sessionStorage.getItem("user")).id
+        const id=UserServices.getUserFromToken().id
         UserServices.getUser(id)
         .then(data=>{
             setUser(data)

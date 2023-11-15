@@ -5,11 +5,11 @@ export default function PropertyCard(props) {
     let buttons;
     if (props.role=="OWNER") {
         buttons=(<>
-            <MDBBtn color="warning" onClick={()=>props.openModal(props.property,"edit")} className="px-3 my-3 mx-3"><FaEdit size={28}/></MDBBtn>
-            <MDBBtn color="danger" className="px-3 my-3 mx-3"><FaTrash size={28}/></MDBBtn>
+            <MDBBtn color="warning" className="px-3 my-3 mx-3"><FaEdit size={28}/></MDBBtn>
+            <MDBBtn color="danger" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id)}><FaTrash size={28}/></MDBBtn>
         </>)
     }else{
-        buttons=(<MDBBtn color="primary" className="px-3 my-5 mx-3" onClick={()=>props.openModal(props.property,"detail")}><FaInfo size={28}/></MDBBtn>)
+        buttons=(<MDBBtn color="primary" className="px-3 my-5 mx-3"><FaInfo size={28}/></MDBBtn>)
     }
 
     return(

@@ -2,17 +2,23 @@ import axios from "axios"
 
 const hostName=import.meta.env.VITE_HUISTER_API_URL+"properties"
 
-function getAllProperties(id) {
-    return axios.get(`${hostName}/${id}`)
+function getAllProperties() {
+    return axios.get(`${hostName}`)
     .then(response=>response.data)
 }
 
-function getRentedNotRentedRatio(id) {
-     return axios.get(`${hostName}/dashboard/rentedRatio/${id}`)
+function getRentedNotRentedRatio() {
+     return axios.get(`${hostName}/dashboard/rentedRatio`)
     .then(response=>response.data)
+}
+
+function deleteProperty(id){
+    return axios.delete(`${hostName}/${id}`)
+    
 }
 
 export default {
     getAllProperties,
-    getRentedNotRentedRatio
+    getRentedNotRentedRatio,
+    deleteProperty
 }

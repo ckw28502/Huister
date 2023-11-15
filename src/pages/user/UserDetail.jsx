@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import UserServices from "../../services/UserServices"
-import { MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit"
+import { MDBCol, MDBContainer } from "mdb-react-ui-kit"
 import { FaEnvelope, FaPhone } from "react-icons/fa"
 
 

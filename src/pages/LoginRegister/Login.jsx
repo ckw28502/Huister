@@ -8,9 +8,12 @@ import { useState } from 'react';
 import './loginregister.css';
 import userservices from '../../services/UserServices';
 import ToastServices from '../../services/ToastServices';
+import { useNavigate } from 'react-router-dom';
 
 
 function Login(props) {
+
+  const navigate=useNavigate()
   const [formData,setFormData]=useState({
     username:'',
     password:''
@@ -24,22 +27,20 @@ function Login(props) {
 
     event.preventDefault()
 
-    userservices.Login(formData).then(data=>{
-      sessionStorage.setItem("user",JSON.stringify(data))
+    userservices.Login(formData).then(user=>{
       sessionStorage.setItem("page","Dashboard")
-      
-      switch (data.role) {
+      switch (user.role) {
 
         case "ADMIN":
-          window.location.href='/admin'
+          navigate('/admin')
           break;
 
         case "OWNER":
-          window.location.href='/owner'
+          navigate('/owner')
           break;
 
         case "CUSTOMER":
-          window.location.href='/customer'
+          navigate('/customer')
           break;
         default:
           break;

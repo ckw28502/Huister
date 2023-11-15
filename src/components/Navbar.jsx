@@ -13,12 +13,14 @@ import Logo from '../assets/logo.png';
 import NavbarItem from './NavbarItem';
 import { FaSignOutAlt } from 'react-icons/fa';
 import clickable from '../pages/clickable.module.css'
+import UserServices from '../services/UserServices';
+import { useNavigate } from 'react-router-dom';
 
 export default function Navbar(props) {
   const [showBasic, setShowBasic] = useState(false);
   let items;
   let setItems;
-  const user=JSON.parse(sessionStorage.getItem("user"))
+  const user=UserServices.getUserFromToken()
   const page=sessionStorage.getItem("page")
   if (user.role=='ADMIN') {
     [items,setItems]=useState([
@@ -45,9 +47,15 @@ export default function Navbar(props) {
       ])
   }
 
+  const navigate=useNavigate()
+
   const LogOut=()=>{
     sessionStorage.clear();
-    window.location.href="/";
+    navigate('/')
+  }
+
+  const toUserProfile=()=>{
+    navigate('/')
   }
 
   const changePage=(name)=>{
@@ -87,7 +95,7 @@ export default function Navbar(props) {
             </MDBNavbarNav>
           </MDBCol>
           <MDBCol md="1" className='d-flex pe-3 m=lg-s-3 me-4'>
-          {(user.role!="ADMIN")?<img src={user.profilePictureUrl} style={{maxHeight:"50px",maxWidth:"50px"}} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
+          {(user.role!="ADMIN")?<img src={user.profilePictureUrl} style={{maxHeight:"50px",maxWidth:"50px"}}name="userProfile" onClick={changePage} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
           </MDBCol>
           <MDBCol md="1" >
             <FaSignOutAlt className={clickable.clickablePointer} onClick={LogOut} size={28}/>

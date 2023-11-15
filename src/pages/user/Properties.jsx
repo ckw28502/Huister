@@ -6,11 +6,13 @@ import Modal from "../../components/Modal";
 import PropertyCard from "../../components/PropertyCard";
 import CityServices from "../../services/CityServices";
 import Select from "react-select";
+import UserServices from "../../services/UserServices";
+import DeleteProperty from "./DeleteProperty";
+import ToastServices from "../../services/ToastServices";
 
 
 export default function Properties(){
-    const jsonUser=sessionStorage.getItem("user")
-    const user=JSON.parse(jsonUser)
+    const user=UserServices.getUserFromToken()
 
     const [properties,setProperties]=useState([])
 
@@ -39,14 +41,18 @@ export default function Properties(){
     const [cityOption,setCityOption]=useState(cityFilterOptions[0])
     
 
-    useEffect(()=>{
-        PropertyServices.getAllProperties(user.id)
+    const getProperties=()=>{
+        PropertyServices.getAllProperties()
         .then(data=>setProperties(data))
-        CityServices.getAllCities(user.id)
+        CityServices.getAllCities()
         .then(data=>data.cities.map(datum=>{
             return {label:datum.name,value:datum.id}
         }))
         .then(cityArr=>setCityFilterOptions(cityFilterOptions.concat(cityArr)))
+    }
+
+    useEffect(()=>{
+        getProperties()
     },[])
 
     const [propertyCards,setPropertyCards]=useState([])
@@ -105,26 +111,30 @@ export default function Properties(){
                 break;
         }
         setPropertyCards(
-             sortedProperty.map(property=><PropertyCard key={property.id} property={property} openModal={openModal} role={user.rol}/>)
+             sortedProperty.map(property=><PropertyCard key={property.id} property={property} openModal={toggleModal} role={user.role}/>)
         )
     },[properties,cityOption,sortOption,ascendingSort])
 
     const [modal,setModal]=useState(false);
-    const [modalTitle,setModalTitle]=useState("Property Details")
-    const toggleModal=()=>{
+    const [propertyId,setPropertyId]=useState(null);
+    const toggleModal=(id)=>{
+        setPropertyId(id)
         setModal(!modal);
     }
-    const openModal=()=>{
-        toggleModal()
+
+    const deleteProperty=()=>{
+        PropertyServices.deleteProperty(propertyId)
+        .then(()=>ToastServices.Success("Property Deleted Successfully!"))
+        .then(()=>getProperties())
+        .catch(()=>ToastServices.Error("Internal Server Error!"));
     }
-    
-    
+
     return(
         <>
             <MDBContainer fluid className="px-5 mx-5">
                 <h1>Properties</h1>
                 <MDBRow className=" my-3">
-                    <MDBRow>
+                    <MDBRow className="mb-4">
                         <MDBCol>
                             <Select options={cityFilterOptions} defaultValue={cityFilterOptions[0]} onChange={setCityOption}/>
                         </MDBCol>
@@ -133,15 +143,17 @@ export default function Properties(){
                             <Select options={ascSortOptions} defaultValue={ascSortOptions[0]} onChange={setAscendingSort}/>
                         </MDBCol>
                     </MDBRow>
-                    <MDBRow>
-                        {(user.role=="OWNER")?<MDBBtn className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
+                    <MDBRow className="my-5">
+                        <MDBCol size='1'>
+                            {(user.role=="OWNER")?<MDBBtn className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
+                        </MDBCol>
                     </MDBRow>
                 </MDBRow>
                 <MDBRow>
                     {(propertyCards.length>0)?propertyCards:<h2>No Property Found!</h2>}
                 </MDBRow>
             </MDBContainer>
-            {/* <Modal scrollable title={modalTitle} body={<CreateUpdateProperty mode={modalMode} property={property}/>} modal={modal} toggleModal={toggleModal} button1={(modalMode=="detail")?'CLOSE':'CANCEL'} button2={(modalMode!="detail")?'SAVE':''}/> */}
+            <Modal scrollable title={"Delete Property"} parentMethod={deleteProperty} body={<DeleteProperty/>} modal={modal} toggleModal={toggleModal} button1={'NO'} button2={'YES'}/>
         </>
     )
 }
