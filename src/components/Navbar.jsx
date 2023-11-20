@@ -50,11 +50,6 @@ export default function Navbar(props) {
   const navigate=useNavigate()
 
   const LogOut=()=>{
-    sessionStorage.clear();
-    navigate('/')
-  }
-
-  const toUserProfile=()=>{
     navigate('/')
   }
 

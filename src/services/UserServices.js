@@ -27,9 +27,18 @@ async function Login(formData){
     return response
 }
 
+function activateAccount(username) {
+    axios.put(`${hostName}/activate`,{username})
+}
+
 function getUser(id){
     return axios.get(`${hostName}/${id}`)
     .then(response=>response.data)
+}
+
+function Logout() {
+    sessionStorage.clear();
+    axios.defaults.common.headers["Authorization"]=null;
 }
 
 function getAllOwners() {
@@ -42,5 +51,7 @@ export default {
     Login,
     getAllOwners,
     getUser,
-    getUserFromToken
+    getUserFromToken,
+    Logout,
+    activateAccount
 }
