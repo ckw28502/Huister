@@ -12,19 +12,19 @@ import {
 
 function Modal(props) {
   let modal=props.modal
-  const accepted=useRef(false)
+  
   const toggleModal=()=>{
-    modal=!modal
-    props.toggleModal(accepted.current)
+    props.toggleModal()
   }
   const Accept=()=>{
-    accepted.current=true
-    toggleModal()
+    props.toggleModal()
+    props.accept()
+
   }
   return (
     <>
-      <MDBModal show={modal&&!accepted.current} tabIndex='-1'>
-        <MDBModalDialog scrollable={props.scrollable}>
+      <MDBModal show={modal} tabIndex='-1'>
+        <MDBModalDialog size="lg" scrollable={props.scrollable}>
           <MDBModalContent>
             <MDBModalHeader>
               <MDBModalTitle>{props.title}</MDBModalTitle>
@@ -41,7 +41,7 @@ function Modal(props) {
               <MDBBtn color='danger' onClick={toggleModal}>
                 {props.button1}
               </MDBBtn>
-              {(props.button2)?(<MDBBtn onClick={(props.parentMethod!=null)?props.parentMethod:Accept}>{props.button2}</MDBBtn>):(<></>)}
+              {(props.button2)?(<MDBBtn onClick={Accept}>{props.button2}</MDBBtn>):(<></>)}
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>

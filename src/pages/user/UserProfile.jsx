@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import UserServices from "../../services/UserServices";
 import { FaCamera, FaSave } from "react-icons/fa";
 import ToastServices from "../../services/ToastServices";
+import FirebaseServices from "../../services/FirebaseServices";
 
 export default function UserProfile(){
     const [user,setUser]=useState({
@@ -61,8 +62,16 @@ export default function UserProfile(){
         }
 
         if (validate) {
-            UserServices.updateUser(user)
-            .then(ToastServices.Success("Your data is updated succesfully"))
+            if (user.profilePicture) {
+                FirebaseServices.uploadImage(user.profilePicture,"user/"+user.username)
+            }
+            UserServices.updateUser({
+                name:user.name,
+                phoneNumber:user.phoneNumber
+            })
+            .then(()=>{
+                ToastServices.Success("Your data is updated succesfully")
+            })
         }
 
     }
@@ -84,16 +93,16 @@ export default function UserProfile(){
                 </div>
                 </MDBRow>
                 <MDBRow className="">
-                    <MDBInput wrapperClass="my-3" name="username" value={"@"+user.username} disabled label="Username"/>
-                    <MDBInput wrapperClass="my-3" name="email" value={user.email} disabled label="Email"/>
-                    <MDBValidation>
+                    <MDBInput wrapperClass="my-3" name="username" value={"@"+user.username} readOnly label="Username"/>
+                    <MDBInput wrapperClass="my-3" name="email" value={user.email} readOnly label="Email"/>
+                    <MDBValidation onSubmit={save}>
                         <MDBValidationItem className="my-5" feedback="Name cannot be empty!" invalid>
                             <MDBInput required onChange={e=>setFormData(e)} name="name" value={user.name}  label="Name"/>
                         </MDBValidationItem>
                         <MDBValidationItem className="my-5" feedback="Not a valid dutch phone number!" invalid>
                             <MDBInput wrapperClass="my-3" required onChange={e=>phoneNumberChecker(e)} name="phoneNumber" value={user.phoneNumber}  label="Phone Number"/>
                         </MDBValidationItem>
-                        <MDBBtn onClick={save} className="w-25 align-self-center"><FaSave size={36}/></MDBBtn>
+                        <MDBBtn className="w-25 align-self-center"><FaSave size={36}/></MDBBtn>
                     </MDBValidation>
                 </MDBRow>
             </MDBCol>

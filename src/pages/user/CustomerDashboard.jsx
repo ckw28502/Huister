@@ -9,7 +9,7 @@ export default function CustomerDashboard(){
     const [rentedOrder,setRentedOrder]=useState([])
 
     useEffect(()=>{
-        OrderServices.getAllOrders(user.id)
+        OrderServices.getAllOrders()
         .then(data=>data.filter(order=>order.status=="ACCEPTED"))
         .then(acceptedOrders=>setRentedOrder(acceptedOrders.map((order,index)=><OrderCard order={order} key={index} isAccepted={true}/> )))
     },[])

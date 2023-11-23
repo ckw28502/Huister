@@ -17,8 +17,13 @@ function deleteProperty(id){
     
 }
 
+function createProperty(formData) {
+    return axios.post(`${hostName}`,formData)
+}
+
 export default {
     getAllProperties,
     getRentedNotRentedRatio,
-    deleteProperty
+    deleteProperty,
+    createProperty
 }

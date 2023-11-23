@@ -46,6 +46,18 @@ function getAllOwners() {
     .then(response=>response.data)
 }
 
+function forgotPassword(username){
+    return axios.post(`${hostName}/forgot`,{username})
+}
+
+function changePassword(username,password){
+    return axios.put(`${hostName}/changePassword`,{username,newPassword:password})
+}
+
+function updateUser(formData){
+    return axios.put(`${hostName}`,formData)
+}
+
 export default {
     saveUser,
     Login,
@@ -53,5 +65,8 @@ export default {
     getUser,
     getUserFromToken,
     Logout,
-    activateAccount
+    activateAccount,
+    forgotPassword,
+    changePassword,
+    updateUser
 }

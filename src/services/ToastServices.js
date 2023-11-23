@@ -28,7 +28,22 @@ function Success(message) {
         })
 }
 
+function successWithOnClose(message,onClose){
+    toast.success(message, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        },onClose)
+}
+
+
 export default {
     Error,
-    Success
+    Success,
+    successWithOnClose
 }

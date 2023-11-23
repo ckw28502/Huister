@@ -1,6 +1,6 @@
 import { MDBBtn, MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit";
-import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { FaCheck, FaCross, FaPlus } from "react-icons/fa";
 import PropertyServices from "../../services/PropertyServices";
 import Modal from "../../components/Modal";
 import PropertyCard from "../../components/PropertyCard";
@@ -9,6 +9,9 @@ import Select from "react-select";
 import UserServices from "../../services/UserServices";
 import DeleteProperty from "./DeleteProperty";
 import ToastServices from "../../services/ToastServices";
+import { FaXmark } from "react-icons/fa6";
+import CreateProperty from "./CreateProperty";
+import FirebaseServices from "../../services/FirebaseServices";
 
 
 export default function Properties(){
@@ -115,19 +118,53 @@ export default function Properties(){
         )
     },[properties,cityOption,sortOption,ascendingSort])
 
+    const[modalBody,setModalBody]=useState(null)
+
     const [modal,setModal]=useState(false);
     const [propertyId,setPropertyId]=useState(null);
-    const toggleModal=(id)=>{
+    const toggleModal=(id,body)=>{
         setPropertyId(id)
-        setModal(!modal);
+        switch (body) {
+            case "DELETE":
+                setModalBody(<DeleteProperty/>)
+                childRef.current=null
+                break;
+            case "CREATE":
+                setModalBody(<CreateProperty ref={childRef}/>)
+                break
+            default:
+                null
+                break;
+        }
+        setModal(!modal)
     }
 
-    const deleteProperty=()=>{
-        PropertyServices.deleteProperty(propertyId)
-        .then(()=>ToastServices.Success("Property Deleted Successfully!"))
-        .then(()=>getProperties())
-        .catch(()=>ToastServices.Error("Internal Server Error!"));
+
+    const onHandleSubmit=()=>{
+
+        //Create or Update
+        if (childRef.current) {
+            const formData=childRef.current.handleSubmit()
+            
+            if (formData.mode=="CREATE") {
+                FirebaseServices.uploadImage(formData.image,"/property/"+formData.streetName+"-"+formData.houseNumber)
+                .then(downloadUrl=>{
+                    formData.imageUrl=downloadUrl
+                    PropertyServices.createProperty(formData)
+                    .then(()=>ToastServices.Success("Property Created Successfully!!!"))
+                })
+            }
+        }else{
+            //Delete
+            PropertyServices.deleteProperty(propertyId)
+            .then(()=>ToastServices.Success("Property Deleted Successfully!"))
+            .then(()=>getProperties())
+            .catch(()=>ToastServices.Error("Internal Server Error!"));
+        }
     }
+
+    const childRef=useRef();
+
 
     return(
         <>
@@ -145,7 +182,7 @@ export default function Properties(){
                     </MDBRow>
                     <MDBRow className="my-5">
                         <MDBCol size='1'>
-                            {(user.role=="OWNER")?<MDBBtn className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
+                            {(user.role=="OWNER")?<MDBBtn onClick={()=>toggleModal(0,"CREATE")}className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
                         </MDBCol>
                     </MDBRow>
                 </MDBRow>
@@ -153,7 +190,7 @@ export default function Properties(){
                     {(propertyCards.length>0)?propertyCards:<h2>No Property Found!</h2>}
                 </MDBRow>
             </MDBContainer>
-            <Modal scrollable title={"Delete Property"} parentMethod={deleteProperty} body={<DeleteProperty/>} modal={modal} toggleModal={toggleModal} button1={'NO'} button2={'YES'}/>
+            <Modal scrollable title={"Delete Property"} accept={onHandleSubmit} body={modalBody} modal={modal} toggleModal={toggleModal} button1={<FaXmark/>} button2={<FaCheck/>}/>
         </>
     )
 }

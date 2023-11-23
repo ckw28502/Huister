@@ -6,9 +6,9 @@ export default function PropertyCard(props) {
     if (props.role=="OWNER") {
         buttons=(<>
             <MDBBtn color="warning" className="px-3 my-3 mx-3"><FaEdit size={28}/></MDBBtn>
-            <MDBBtn color="danger" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id)}><FaTrash size={28}/></MDBBtn>
+            <MDBBtn color="danger" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"DELETE")}><FaTrash size={28}/></MDBBtn>
         </>)
-    }else{
+    }else if(props.role=="CUSTOMER"){
         buttons=(<MDBBtn color="primary" className="px-3 my-5 mx-3"><FaInfo size={28}/></MDBBtn>)
     }
 
@@ -26,6 +26,7 @@ export default function PropertyCard(props) {
                     <MDBCardText>
                     <small className='text-muted'>{props.property.area} m<sup>2</sup></small>
                     </MDBCardText>
+                    <MDBCardText><u>{props.property.ownerName}</u></MDBCardText>
                 </MDBCardBody>
                 </MDBCol>
                 <MDBCol md='2' className="my-4 d-flex flex-column">

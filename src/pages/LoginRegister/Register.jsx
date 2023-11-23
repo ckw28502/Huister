@@ -15,6 +15,7 @@ import TermsAndConditions from './TermAndConditions';
 import { FaX,FaCheck } from 'react-icons/fa6';
 import InputFile from '../../components/InputFile';
 import userservices from '../../services/UserServices';
+import FirebaseServices from '../../services/FirebaseServices';
 import ToastServices from '../../services/ToastServices';
 
 function Register(props) {
@@ -69,9 +70,9 @@ function Register(props) {
   
   //modal
   const [modal,setModal]=useState(false);
-  const toggleModal=(isAccepted)=>{
+  const toggleModal=()=>{
     setModal(!modal);
-    setTermsConditions(isAccepted)
+    setTermsConditions(false)
   }
 
   //password checker
@@ -96,7 +97,6 @@ function Register(props) {
     if (message!=confirmationPasswordErrorMessage) {
       setConfirmationPasswordErrorMessage(message)
     }
-    console.log(e.target.name);
     updateFormData(e)
   }
 
@@ -150,13 +150,15 @@ function Register(props) {
     }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
       ToastServices.Error("There is an empty field!")
     }else{
-      userservices.saveUser(formData)
-      .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
-      .catch(error=>{
-        const errorMessages=error.response.data.errors
-        console.log(errorMessages);
-        errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
-      })
+      FirebaseServices.uploadImage(formData.profilePicture,"user/"+formData.username)
+      .then(downloadUrl=>{
+        setFormData({...formData,["profilePictureUrl"]:downloadUrl})
+        userservices.saveUser(formData)
+        .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
+        .catch(error=>{
+          const errorMessages=error.response.data.errors
+          errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
+      })})
     }
   }
   return (
@@ -228,7 +230,7 @@ function Register(props) {
       </MDBValidation>
 
       {/** Modal for terms and conditions */}
-      <Modal scrollable title='Terms & Conditions' body={<TermsAndConditions/>} modal={modal} toggleModal={toggleModal} button1='REJECT' button2='ACCEPT'/>
+      <Modal scrollable title='Terms & Conditions' body={<TermsAndConditions/>} modal={modal} toggleModal={toggleModal} button1='REJECT' button2='ACCEPT' accept={()=>setTermsConditions(true)}/>
     </>
   );
 }
