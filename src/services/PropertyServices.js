@@ -1,32 +1,32 @@
-import axios from "axios"
+import axiosInstance from "./AxiosService"
 
-const hostName=import.meta.env.VITE_HUISTER_API_URL+"properties"
+const hostName="properties"
 
 function getAllProperties() {
-    return axios.get(`${hostName}`)
+    return axiosInstance.get(`${hostName}`)
     .then(response=>response.data)
 }
 
 function getProperty(id){
-    return axios.get(`${hostName}/${id}`)
+    return axiosInstance.get(`${hostName}/${id}`)
     .then(response=>response.data)
 }
 
 function getRentedNotRentedRatio() {
-     return axios.get(`${hostName}/dashboard/rentedRatio`)
+     return axiosInstance.get(`${hostName}/dashboard/rentedRatio`)
     .then(response=>response.data)
 }
 
 function deleteProperty(id){
-    return axios.delete(`${hostName}/${id}`)
+    return axiosInstance.delete(`${hostName}/${id}`)
     
 }
 
 function createProperty(formData) {
-    return axios.post(`${hostName}`,formData)
+    return axiosInstance.post(`${hostName}`,formData)
 }
 function updateProperty(id,formData) {
-    return axios.put(`${hostName}/${id}`,formData)
+    return axiosInstance.put(`${hostName}/${id}`,formData)
 }
 
 export default {

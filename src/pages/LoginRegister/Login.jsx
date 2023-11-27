@@ -46,8 +46,9 @@ function Login(props) {
           break;
       }
     }).catch((error)=>{
-      const errorMessages=error.response.data.errors
-      errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
+      console.log(error);
+      //const errorMessages=error.response.data.errors
+      //errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
     })
 
   }

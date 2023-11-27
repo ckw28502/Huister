@@ -3,8 +3,8 @@ import { MDBBadge, MDBCol, MDBListGroupItem } from "mdb-react-ui-kit";
 
 export default function UserListItem(props){
     return(
-        <MDBCol className="me-3" xl={5} md={11}>
-            <MDBListGroupItem onClick={()=>props.toggleModal(props.owner.id)}style={{cursor:"pointer"}} className='d-flex border-dark border border-5 rounded-pill bg-light justify-content-between align-items-center px-4 mx-1 mb-3 container-fluid w-100'>
+        <MDBCol className="mx-5" xl={5} md={12}>
+            <MDBListGroupItem onClick={()=>props.toggleModal(props.owner.id)}style={{cursor:"pointer"}} className='d-flex border-dark border border-5 rounded-pill bg-light justify-content-between align-items-center px-4 mx-1 mb-3 container-fluid min-w-100'>
                 <div className='d-flex align-items-center'>
                 <img
                     src={props.owner.profilePictureUrl}

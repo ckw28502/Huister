@@ -1,15 +1,11 @@
-import axios from "axios"
 import { jwtDecode } from "jwt-decode";
+import axiosInstance from "./AxiosService";
 
-const hostName=import.meta.env.VITE_HUISTER_API_URL+'users'
-
-if (sessionStorage.getItem("token")!=null) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(sessionStorage.getItem("token"))}`;
-}
+const hostName="users"
 
 
 function saveUser(formUser) {
-    return axios.post(hostName,formUser);
+    return axiosInstance.post(hostName,formUser);
 }
 
 function getUserFromToken() {
@@ -17,10 +13,9 @@ function getUserFromToken() {
 }
 
 async function Login(formData){
-    const response = await axios.post(`${hostName}/login`, formData)
+    const response = await axiosInstance.post(`${hostName}/login`, formData)
     .then(response=>{
         const token=response.data.token
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         sessionStorage.setItem("token",JSON.stringify(token))
         return jwtDecode(token)
     })
@@ -28,34 +23,33 @@ async function Login(formData){
 }
 
 function activateAccount(username) {
-    axios.put(`${hostName}/activate`,{username})
+    axiosInstance.put(`${hostName}/activate`,{username})
 }
 
 function getUser(id){
-    return axios.get(`${hostName}/${id}`)
+    return axiosInstance.get(`${hostName}/${id}`)
     .then(response=>response.data)
 }
 
 function Logout() {
     sessionStorage.clear();
-    axios.defaults.common.headers["Authorization"]=null;
 }
 
 function getAllOwners() {
-    return axios.get(`${hostName}/owners`)
+    return axiosInstance.get(`${hostName}/owners`)
     .then(response=>response.data)
 }
 
 function forgotPassword(username){
-    return axios.post(`${hostName}/forgot`,{username})
+    return axiosInstance.post(`${hostName}/forgot`,{username})
 }
 
 function changePassword(username,password){
-    return axios.put(`${hostName}/changePassword`,{username,newPassword:password})
+    return axiosInstance.put(`${hostName}/changePassword`,{username,newPassword:password})
 }
 
 function updateUser(formData){
-    return axios.put(`${hostName}`,formData)
+    return axiosInstance.put(`${hostName}`,formData)
 }
 
 export default {

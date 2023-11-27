@@ -1,9 +1,9 @@
-import axios from "axios"
+import axiosInstance from "./AxiosService"
 
-const hostName=import.meta.env.VITE_HUISTER_API_URL+"cities"
+const hostName="cities"
 
 function getAllCities(){
-    return axios.get(`${hostName}`)
+    return axiosInstance.get(`${hostName}`)
     .then(response=>response.data)
 }
 
