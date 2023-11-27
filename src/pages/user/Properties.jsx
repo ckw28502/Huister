@@ -12,6 +12,7 @@ import ToastServices from "../../services/ToastServices";
 import { FaXmark } from "react-icons/fa6";
 import CreateProperty from "./CreateProperty";
 import FirebaseServices from "../../services/FirebaseServices";
+import EditProperty from "./EditProperty";
 
 
 export default function Properties(){
@@ -132,6 +133,9 @@ export default function Properties(){
             case "CREATE":
                 setModalBody(<CreateProperty ref={childRef}/>)
                 break
+            case "EDIT":
+                setModalBody(<EditProperty propertyId={id} ref={childRef}/>)
+                break
             default:
                 null
                 break;
@@ -152,7 +156,14 @@ export default function Properties(){
                     formData.imageUrl=downloadUrl
                     PropertyServices.createProperty(formData)
                     .then(()=>ToastServices.Success("Property Created Successfully!!!"))
+                    
                 })
+            }else{
+                if(formData.image){
+                    FirebaseServices.uploadImage(formData.image,"/property/"+formData.streetName+"-"+formData.houseNumber)
+                }
+                PropertyServices.updateProperty(propertyId,formData)
+                .then(()=>ToastServices.Success("Property Updated Successfully!"))
             }
         }else{
             //Delete
@@ -161,6 +172,7 @@ export default function Properties(){
             .then(()=>getProperties())
             .catch(()=>ToastServices.Error("Internal Server Error!"));
         }
+        getProperties()
     }
 
     const childRef=useRef();

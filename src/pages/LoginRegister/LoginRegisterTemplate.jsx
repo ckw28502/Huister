@@ -31,6 +31,7 @@ import {
         }
     }
     const changePage=(page)=>{
+      window.scrollTo(0, 0);
         setCurrentPage(page)
     }
     const pages={
@@ -68,11 +69,17 @@ import {
           <MDBCol sm='6'>
             <Logo/>
   
-            <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
+            <div className='mt-4 h-custom-2 w-75 pt-4'>
   
-              <h3 className="fw-normal align-self-center mb-2 ps-5 ms-3 pb-3" style={{letterSpacing: '1px'}}>{currentPage}</h3>
+              <MDBRow className='d-flex justify-content-center ms-xl-5 ms-0 ps-5'>
+                <MDBCol md={11} className='ms-xl-5 ms-0'>
+                <h1 className="fw-normal mb-2 ms-xl-5 ms-md-5 ps-md-5 ps-xl-3 ms-3 pb-3" style={{letterSpacing: '1px'}}>{currentPage}</h1>
+                </MDBCol>
+              </MDBRow>
   
+              <MDBRow>
               {component}
+              </MDBRow>
   
             </div>
   
