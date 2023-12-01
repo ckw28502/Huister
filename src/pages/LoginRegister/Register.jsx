@@ -70,9 +70,9 @@ function Register(props) {
   
   //modal
   const [modal,setModal]=useState(false);
-  const toggleModal=(isAccepted)=>{
+  const toggleModal=()=>{
     setModal(!modal);
-    setTermsConditions(isAccepted)
+    setTermsConditions(false)
   }
 
   //password checker
@@ -97,7 +97,6 @@ function Register(props) {
     if (message!=confirmationPasswordErrorMessage) {
       setConfirmationPasswordErrorMessage(message)
     }
-    console.log(e.target.name);
     updateFormData(e)
   }
 
@@ -147,17 +146,19 @@ function Register(props) {
     }else if (passwordfailed) {
       ToastServices.Error("Password requirements haven't been fulfilled!")
     }else if (formData.password!=formData.confirmationPassword){
-
       ToastServices.Error("Confirmation Password is not equals to the password!")
+    }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
+      ToastServices.Error("There is an empty field!")
     }else{
-      FirebaseServices.uploadImage(formData.profilePicture,`user/${formData.username}`)
-      .then(fullPath=>setFormData({...formData,profilePictureUrl:fullPath}))
-      userservices.saveUser(formData)
-      .catch(error=>{
-        const errorMessages=error.response.data.errors
-        console.log(errorMessages);
-        errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
-      })
+      FirebaseServices.uploadImage(formData.profilePicture,"user/"+formData.username)
+      .then(downloadUrl=>{
+        setFormData({...formData,["profilePictureUrl"]:downloadUrl})
+        userservices.saveUser(formData)
+        .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
+        .catch(error=>{
+          const errorMessages=error.response.data.properties.errors
+          errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
+      })})
     }
   }
   return (
@@ -200,7 +201,7 @@ function Register(props) {
         </MDBValidationItem>
         </div>
 
-        {/** Password in  put */}
+        {/** Password input */}
         <MDBValidationItem invalid feedback=''>
           <InputPassword id="registerPassword" toggleRequirements={()=>setShowRequirements(true)} name="password" label="Password" getValue={passwordChecker}/>
         </MDBValidationItem>
@@ -229,7 +230,7 @@ function Register(props) {
       </MDBValidation>
 
       {/** Modal for terms and conditions */}
-      <Modal scrollable title='Terms & Conditions' body={<TermsAndConditions/>} modal={modal} toggleModal={toggleModal} button1='REJECT' button2='ACCEPT'/>
+      <Modal scrollable title='Terms & Conditions' body={<TermsAndConditions/>} modal={modal} toggleModal={toggleModal} button1='REJECT' button2='ACCEPT' accept={()=>setTermsConditions(true)}/>
     </>
   );
 }

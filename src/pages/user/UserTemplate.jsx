@@ -5,15 +5,19 @@ import Properties from './Properties';
 import Owners from './Owners';
 import OwnerDashboard from "./OwnerDashBoard";
 import CustomerDashboard from "./CustomerDashboard";
+import UserProfile from "./UserProfile";
+import UserServices from "../../services/UserServices";
+import { useNavigate } from "react-router-dom";
 
 export default function UserTemplate(){
-    const [currentPage,setCurrentPage]=useState('Dashboard');
-    if (sessionStorage.getItem("user")===null) {
-        window.location.href="/"
+    const [currentPage,setCurrentPage]=useState(sessionStorage.getItem("page"));
+    const navigate=useNavigate()
+    const user=useState(UserServices.getUserFromToken())[0]
+    if (user==null) {
+        navigate("/")
     }
-    const user=useState(JSON.parse(sessionStorage.getItem('user')))[0]
-    const switchPage=(page)=>{
-        setCurrentPage(page)
+    const switchPage=()=>{
+        setCurrentPage(sessionStorage.getItem("page"))
     }
     const checkUserRoleForDashboard=()=>{
         switch (user.role) {
@@ -40,6 +44,7 @@ export default function UserTemplate(){
                 setPageObject(<Owners/>)
                 break;
             default:
+                setPageObject(<UserProfile/>)
                 break;
         }
     },[currentPage])    

@@ -1,17 +1,22 @@
 import { MDBBtn, MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit";
-import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { FaCheck, FaCross, FaPlus } from "react-icons/fa";
 import PropertyServices from "../../services/PropertyServices";
 import Modal from "../../components/Modal";
-import CreateUpdateProperty from "./CreateUpdateProperty";
 import PropertyCard from "../../components/PropertyCard";
 import CityServices from "../../services/CityServices";
 import Select from "react-select";
+import UserServices from "../../services/UserServices";
+import DeleteProperty from "./DeleteProperty";
+import ToastServices from "../../services/ToastServices";
+import { FaXmark } from "react-icons/fa6";
+import CreateProperty from "./CreateProperty";
+import FirebaseServices from "../../services/FirebaseServices";
+import EditProperty from "./EditProperty";
 
 
 export default function Properties(){
-    const jsonUser=sessionStorage.getItem("user")
-    const user=JSON.parse(jsonUser)
+    const user=UserServices.getUserFromToken()
 
     const [properties,setProperties]=useState([])
 
@@ -40,14 +45,18 @@ export default function Properties(){
     const [cityOption,setCityOption]=useState(cityFilterOptions[0])
     
 
-    useEffect(()=>{
-        PropertyServices.getAllProperties(user.id)
+    const getProperties=()=>{
+        PropertyServices.getAllProperties()
         .then(data=>setProperties(data))
-        CityServices.getAllCities(user.id)
+        CityServices.getAllCities()
         .then(data=>data.cities.map(datum=>{
             return {label:datum.name,value:datum.id}
         }))
         .then(cityArr=>setCityFilterOptions(cityFilterOptions.concat(cityArr)))
+    }
+
+    useEffect(()=>{
+        getProperties()
     },[])
 
     const [propertyCards,setPropertyCards]=useState([])
@@ -106,41 +115,75 @@ export default function Properties(){
                 break;
         }
         setPropertyCards(
-             sortedProperty.map(property=><PropertyCard key={property.id} property={property} openModal={openModal} role={user.rol}/>)
+             sortedProperty.map(property=><PropertyCard key={property.id} property={property} openModal={toggleModal} role={user.role}/>)
         )
     },[properties,cityOption,sortOption,ascendingSort])
 
+    const[modalBody,setModalBody]=useState(null)
+
     const [modal,setModal]=useState(false);
-    const [modalTitle,setModalTitle]=useState("Property Details")
-    const toggleModal=()=>{
-        setModal(!modal);
-    }
-    const openModal=(selectedProperty,mode)=>{
-        setProperty(selectedProperty)
-        setModalMode(mode)
-        switch (mode) {
-            case "detail":
-                setModalTitle("Property Details")
+    const [propertyId,setPropertyId]=useState(null);
+    const toggleModal=(id,body)=>{
+        setPropertyId(id)
+        switch (body) {
+            case "DELETE":
+                setModalBody(<DeleteProperty/>)
+                childRef.current=null
                 break;
-            case "create":
-                setModalTitle("Create Property")
-                break;
-            case "edit":
-                setModalTitle("Edit Property")
-                break;
+            case "CREATE":
+                setModalBody(<CreateProperty ref={childRef}/>)
+                break
+            case "EDIT":
+                setModalBody(<EditProperty propertyId={id} ref={childRef}/>)
+                break
             default:
+                null
                 break;
         }
-        toggleModal()
+        setModal(!modal)
     }
-    
-    
+
+
+    const onHandleSubmit=()=>{
+
+        //Create or Update
+        if (childRef.current) {
+            const formData=childRef.current.handleSubmit()
+            
+            if (formData.mode=="CREATE") {
+                FirebaseServices.uploadImage(formData.image,"/property/"+formData.streetName+"-"+formData.houseNumber)
+                .then(downloadUrl=>{
+                    formData.imageUrl=downloadUrl
+                    PropertyServices.createProperty(formData)
+                    .then(()=>ToastServices.Success("Property Created Successfully!!!"))
+                    
+                })
+            }else{
+                if(formData.image){
+                    FirebaseServices.uploadImage(formData.image,"/property/"+formData.streetName+"-"+formData.houseNumber)
+                }
+                PropertyServices.updateProperty(propertyId,formData)
+                .then(()=>ToastServices.Success("Property Updated Successfully!"))
+            }
+        }else{
+            //Delete
+            PropertyServices.deleteProperty(propertyId)
+            .then(()=>ToastServices.Success("Property Deleted Successfully!"))
+            .then(()=>getProperties())
+            .catch(()=>ToastServices.Error("Internal Server Error!"));
+        }
+        getProperties()
+    }
+
+    const childRef=useRef();
+
+
     return(
         <>
             <MDBContainer fluid className="px-5 mx-5">
                 <h1>Properties</h1>
                 <MDBRow className=" my-3">
-                    <MDBRow>
+                    <MDBRow className="mb-4">
                         <MDBCol>
                             <Select options={cityFilterOptions} defaultValue={cityFilterOptions[0]} onChange={setCityOption}/>
                         </MDBCol>
@@ -149,15 +192,17 @@ export default function Properties(){
                             <Select options={ascSortOptions} defaultValue={ascSortOptions[0]} onChange={setAscendingSort}/>
                         </MDBCol>
                     </MDBRow>
-                    <MDBRow>
-                        {(user.role=="OWNER")?<MDBBtn className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
+                    <MDBRow className="my-5">
+                        <MDBCol size='1'>
+                            {(user.role=="OWNER")?<MDBBtn onClick={()=>toggleModal(0,"CREATE")}className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
+                        </MDBCol>
                     </MDBRow>
                 </MDBRow>
                 <MDBRow>
-                    {(propertyCards.length>0)?propertyCards:<h1>No Property Found!</h1>}
+                    {(propertyCards.length>0)?propertyCards:<h2>No Property Found!</h2>}
                 </MDBRow>
             </MDBContainer>
-            <Modal scrollable title={modalTitle} body={<CreateUpdateProperty mode={modalMode} property={property}/>} modal={modal} toggleModal={toggleModal} button1={(modalMode=="detail")?'CLOSE':'CANCEL'} button2={(modalMode!="detail")?'SAVE':''}/>
+            <Modal scrollable title={"Delete Property"} accept={onHandleSubmit} body={modalBody} modal={modal} toggleModal={toggleModal} button1={<FaXmark/>} button2={<FaCheck/>}/>
         </>
     )
 }

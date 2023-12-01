@@ -1,9 +1,9 @@
-import axios from "axios"
+import axiosInstance from "./AxiosService"
 
-const hostName="http://localhost:8080/orders"
+const hostName="orders"
 
-function getAllOrders(userId) {
-    return axios.get(`${hostName}/${userId}`)
+function getAllOrders() {
+    return axiosInstance.get(`${hostName}`)
     .then(response=>response.data)
 }
 

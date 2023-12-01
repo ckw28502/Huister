@@ -1,9 +1,9 @@
-import axios from "axios"
+import axiosInstance from "./AxiosService"
 
-const hostName="http://localhost:8080/cities"
+const hostName="cities"
 
-function getAllCities(userId){
-    return axios.get(`${hostName}/${userId}`)
+function getAllCities(){
+    return axiosInstance.get(`${hostName}`)
     .then(response=>response.data)
 }
 

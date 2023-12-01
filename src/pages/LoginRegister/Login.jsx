@@ -8,9 +8,12 @@ import { useState } from 'react';
 import './loginregister.css';
 import userservices from '../../services/UserServices';
 import ToastServices from '../../services/ToastServices';
+import { useNavigate } from 'react-router-dom';
 
 
 function Login(props) {
+
+  const navigate=useNavigate()
   const [formData,setFormData]=useState({
     username:'',
     password:''
@@ -24,27 +27,26 @@ function Login(props) {
 
     event.preventDefault()
 
-    userservices.Login(formData).then(data=>{
-      sessionStorage.setItem("user",JSON.stringify(data))
-      
-      switch (data.role) {
+    userservices.Login(formData).then(user=>{
+      sessionStorage.setItem("page","Dashboard")
+      switch (user.role) {
 
         case "ADMIN":
-          window.location.href='/admin'
+          navigate('/admin')
           break;
 
         case "OWNER":
-          window.location.href='/owner'
+          navigate('/owner')
           break;
 
         case "CUSTOMER":
-          window.location.href='/customer'
+          navigate('/customer')
           break;
         default:
           break;
       }
     }).catch((error)=>{
-      const errorMessages=error.response.data.errors
+      const errorMessages=error.response.data.properties.errors
       errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
     })
 
