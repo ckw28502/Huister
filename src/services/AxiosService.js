@@ -26,7 +26,8 @@ axiosInstance.interceptors.response.use(
     },
     async (error)=>{
         const originalConfig=error.config;
-        if (originalConfig.url!=="/users/login"&&error.response) {
+        console.log(error.response.data.status);
+        if (error.response.data.status==401) {
             originalConfig._retry=true;
 
             try{

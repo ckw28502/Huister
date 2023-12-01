@@ -18,7 +18,7 @@ export default function PropertyCard(props) {
                 <MDBCol md='5' className="h-100 d-flex align-items-center">
                 <MDBCardImage className="object-fit-cover w-100" style={{height:"16vw"}} src={props.property.imageUrl} alt='...' />
                 </MDBCol>
-                <MDBCol md='6'>
+                <MDBCol md='5'>
                 <MDBCardBody className="pt-5">
                     <MDBCardTitle >{props.property.cityName}</MDBCardTitle>
                     <MDBCardText>{props.property.streetName}</MDBCardText>

@@ -156,7 +156,7 @@ function Register(props) {
         userservices.saveUser(formData)
         .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
         .catch(error=>{
-          const errorMessages=error.response.data.errors
+          const errorMessages=error.response.data.properties.errors
           errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))
       })})
     }
