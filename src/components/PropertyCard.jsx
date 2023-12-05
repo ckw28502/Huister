@@ -1,15 +1,40 @@
-import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardText, MDBCardTitle, MDBCol, MDBRow } from "mdb-react-ui-kit";
-import { FaEdit, FaEuroSign, FaInfo, FaTrash } from "react-icons/fa";
+import { MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardText, MDBCardTitle, MDBCol, MDBRow } from "mdb-react-ui-kit";
+import { useEffect, useState } from "react";
+import { FaBell, FaEdit, FaEuroSign, FaInfo, FaTrash } from "react-icons/fa";
+import { FaCartShopping } from "react-icons/fa6";
 
 export default function PropertyCard(props) {
+    const [counter,setCounter]=useState(0);
+    const [notification,setNotifications]=useState("")
+    useEffect(()=>{
+        if (counter==0) {
+            setNotifications("")
+
+        }else if(counter<100){
+            setNotifications(<MDBBadge color='danger' light pill className='position-absolute translate-middle my-3 mx-3' style={{zIndex:"1"}}>
+            {counter}
+            <span className="visually-hidden">unread messages</span>
+        </MDBBadge>)
+        } else {
+            setNotifications(<MDBBadge color='danger' light pill className='position-absolute translate-middle my-3 mx-3' style={{zIndex:"1"}}>
+            99+
+            <span className="visually-hidden">unread messages</span>
+        </MDBBadge>)
+        }
+    },[counter])
     let buttons;
     if (props.role=="OWNER") {
         buttons=(<>
             <MDBBtn color="warning" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"EDIT")}><FaEdit size={28}/></MDBBtn>
             <MDBBtn color="danger" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"DELETE")}><FaTrash size={28}/></MDBBtn>
+
+            <div>
+            {notification}
+            <MDBBtn color="primary" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"DETAIL")}><FaBell size={28}/></MDBBtn>
+            </div>
         </>)
     }else if(props.role=="CUSTOMER"){
-        buttons=(<MDBBtn color="primary" className="px-3 my-5 mx-3"><FaInfo size={28}/></MDBBtn>)
+        buttons=(<MDBBtn color="primary" className="ps-4 my-5 mx-2" onClick={()=>props.openModal(props.property.id,"ORDER")}><FaCartShopping size={28}/></MDBBtn>)
     }
 
     return(

@@ -13,6 +13,9 @@ import { FaXmark } from "react-icons/fa6";
 import CreateProperty from "./CreateProperty";
 import FirebaseServices from "../../services/FirebaseServices";
 import EditProperty from "./EditProperty";
+import OrderProperty from "./OrderProperty";
+import OrderServices from "../../services/OrderServices";
+import PropertyOrder from "./PropertyOrder";
 
 
 export default function Properties(){
@@ -55,8 +58,17 @@ export default function Properties(){
         .then(cityArr=>setCityFilterOptions(cityFilterOptions.concat(cityArr)))
     }
 
+    const [orders,setOrders]=useState([])
+
+    const getOrders=()=>{
+        OrderServices.getAllOrders()
+        .then(data=>data.filter(order=>order.status=="CREATED"))
+        .then(createdOrders=>setOrders(createdOrders))
+    }
+
     useEffect(()=>{
         getProperties()
+        getOrders()
     },[])
 
     const [propertyCards,setPropertyCards]=useState([])
@@ -121,21 +133,46 @@ export default function Properties(){
 
     const[modalBody,setModalBody]=useState(null)
 
+    const [modalTitle,setModalTitle]=useState("")
+
     const [modal,setModal]=useState(false);
     const [propertyId,setPropertyId]=useState(null);
+    const [button1,setButton1]=useState(null);
+    const [button2,setButton2]=useState(null);
     const toggleModal=(id,body)=>{
+        setButton1(<FaXmark/>)
+        setButton2(<FaCheck/>)
         setPropertyId(id)
         switch (body) {
             case "DELETE":
                 setModalBody(<DeleteProperty/>)
+                setModalTitle("Delete Property")
                 childRef.current=null
                 break;
             case "CREATE":
                 setModalBody(<CreateProperty ref={childRef}/>)
+                setModalTitle("Create Property")
                 break
             case "EDIT":
                 setModalBody(<EditProperty propertyId={id} ref={childRef}/>)
+                setModalTitle("Edit Property")
                 break
+            case "ORDER":
+                setModalBody(<OrderProperty propertyId={id} ownerId={user.id} ref={childRef}/>)
+                setModalTitle("Order a property")
+                break
+            case "DETAIL":{
+                const propertyOrders=orders.map(order=>{
+                    if (order.propertyId==id) {
+                        return order
+                    }
+                })
+                setModalBody(<PropertyOrder orders={propertyOrders.reverse()}/>)
+                setModalTitle("Order List")
+                setButton1(null)
+                setButton2(null)
+                break;
+            }
             default:
                 null
                 break;
@@ -158,12 +195,17 @@ export default function Properties(){
                     .then(()=>ToastServices.Success("Property Created Successfully!!!"))
                     
                 })
-            }else{
+            }else if(formData.mode=="EDIT"){
                 if(formData.image){
                     FirebaseServices.uploadImage(formData.image,"/property/"+formData.streetName+"-"+formData.houseNumber)
                 }
                 PropertyServices.updateProperty(propertyId,formData)
                 .then(()=>ToastServices.Success("Property Updated Successfully!"))
+            } else if(formData.mode=="ORDER"){
+                console.log(formData);
+                OrderServices.createOrder(formData)
+                .then(()=>ToastServices.Success("Order successfully created!"));
+                
             }
         }else{
             //Delete
@@ -202,7 +244,7 @@ export default function Properties(){
                     {(propertyCards.length>0)?propertyCards:<h2>No Property Found!</h2>}
                 </MDBRow>
             </MDBContainer>
-            <Modal scrollable title={"Delete Property"} accept={onHandleSubmit} body={modalBody} modal={modal} toggleModal={toggleModal} button1={<FaXmark/>} button2={<FaCheck/>}/>
-        </>
+            <Modal scrollable title={modalTitle} accept={onHandleSubmit} body={modalBody} modal={modal} toggleModal={toggleModal} button1={button1} button2={button2}/>
+        </> 
     )
 }

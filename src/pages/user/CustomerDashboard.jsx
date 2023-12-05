@@ -2,10 +2,11 @@ import { MDBContainer } from "mdb-react-ui-kit";
 import { useEffect, useState } from "react";
 import OrderServices from "../../services/OrderServices";
 import OrderCard from "../../components/OrderCard";
+import UserServices from "../../services/UserServices";
 
 
 export default function CustomerDashboard(){
-    const user=JSON.parse(sessionStorage.getItem("user"))
+    const user=UserServices.getUserFromToken()
     const [rentedOrder,setRentedOrder]=useState([])
 
     useEffect(()=>{
