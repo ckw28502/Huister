@@ -50,6 +50,7 @@ export default function Navbar(props) {
   const navigate=useNavigate()
 
   const LogOut=()=>{
+    UserServices.Logout()
     navigate('/')
   }
 
@@ -90,7 +91,7 @@ export default function Navbar(props) {
             </MDBNavbarNav>
           </MDBCol>
           <MDBCol md="1" className='d-flex pe-3 m=lg-s-3 me-4'>
-          {(user.role!="ADMIN")?<img src={user.profilePictureUrl} style={{maxHeight:"50px",maxWidth:"50px"}}name="userProfile" onClick={changePage} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
+          {(user.role!="ADMIN")?<img src={user.profilePictureUrl} style={{maxHeight:"50px",maxWidth:"50px", cursor:"pointer"}}name="userProfile" onClick={changePage} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
           </MDBCol>
           <MDBCol md="1" >
             <FaSignOutAlt className={clickable.clickablePointer} onClick={LogOut} size={28}/>

@@ -1,38 +1,35 @@
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
+import SockJS from "sockjs-client/dist/sockjs";
+import webstomp from "webstomp-client";
 
-export default class WebSocketService{
-    constructor(){
-        this.stompClient=null;
-        this.orders=[]
-        this.orderCallbacks=[]
+let stompClient=null
+
+function connect(){
+    if(!stompClient){
+        const socket=new SockJS(import.meta.env.VITE_HUISTER_WEBSOCKET_URL+"ws")
+        stompClient=webstomp.over(socket)
     }
+}
 
-    subscribeToOrder(callback){
-        this.orderCallbacks.push(callback)
-    }
-
-    notifyOrderCallbacks(){
-        this.orderCallbacks.forEach(callback=>callback(this.orders))
-    }
-
-    connect(propertyId){
-        const socket=new SockJS("/ws")
-        this.stompClient=Stomp.over(socket)
-
-        this.stompClient.connect({},()=>{
-            this.stompClient.subscribe(`/notifications/order/${propertyId}`,orderJson=>{
+function subscribe(target,callback){
+    if (stompClient) {
+        stompClient.connect({},()=>{
+            stompClient.subscribe(`/notifications`+target,orderJson=>{
                 const newOrder=JSON.parse(orderJson.body)
-                this.orders.push=[...this.orders,newOrder]
-                this.notifyOrderCallbacks()
+                callback(newOrder)
             })
         })
     }
+}
 
-    disconnect(){
-        if (this.stompClient) {
-            this.stompClient.disconnect();
-        }
+function disconnect(){
+    if (stompClient) {
+        stompClient.disconnect();
     }
+}
 
+export default {
+    connect,
+    disconnect,
+    subscribe,
+    stompClient
 }

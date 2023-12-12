@@ -1,4 +1,4 @@
-import { MDBBtn, MDBBtnGroup, MDBContainer } from "mdb-react-ui-kit";
+import { MDBBtn, MDBBtnGroup, MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit";
 import { useEffect, useState } from "react";
 import OrderServices from "../../services/OrderServices";
 import OrderCard from "../../components/OrderCard";
@@ -31,11 +31,21 @@ export default function CustomerDashboard(){
             default:
                 break;
         }
+        updateOrder(tab)
+        
+    }
+
+    const updateOrder=tab=>{
         setShowedOrders(orderConverter(orders.filter(order=>order.status==tab)))
     }
 
+    const cancelOrder=id=>{
+        const newOrders=orders.filter(order=>order.id!=id)
+        setOrders(newOrders)
+    }
+
     const orderConverter=filteredOrders=>{
-        return filteredOrders.map((order,index)=><OrderCard order={order} key={index}/>)
+        return filteredOrders.map((order,index)=><OrderCard order={order} cancelOrder={()=>cancelOrder(order.id)} key={index}/>)
     }
 
     useEffect(()=>{
@@ -44,18 +54,21 @@ export default function CustomerDashboard(){
             setOrders(data)
             const pendingOrders=data.filter(order=>order.status=="CREATED")
             setShowedOrders(orderConverter(pendingOrders))
+
         })
     },[])
+
+    useEffect(()=>updateOrder("CREATED"),[orders])
     
     return(
-        <MDBContainer fluid>
+        <MDBContainer fluid className="mx-3">
             <h1>Your Orders</h1>
             <MDBBtnGroup className="my-5">
                 <MDBBtn color={pendingColor} onClick={e=>changeTab(e.target.value)} value="CREATED">PENDING</MDBBtn>
                 <MDBBtn color={rejectedColor} onClick={e=>changeTab(e.target.value)} value="REJECTED">REJECTED</MDBBtn>
                 <MDBBtn color={acceptedColor} onClick={e=>changeTab(e.target.value)} value="ACCEPTED">ACCEPTED</MDBBtn>
             </MDBBtnGroup>
-            {showedOrders}
+            <MDBRow className="mx-5">{showedOrders}</MDBRow>
         </MDBContainer>
     )
 }

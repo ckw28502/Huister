@@ -1,12 +1,17 @@
 import { MDBBadge, MDBBtn, MDBCol, MDBListGroupItem } from "mdb-react-ui-kit";
-import { FaCheck, FaCross, FaEuroSign } from "react-icons/fa";
+import { FaCheck, FaEuroSign } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 import OrderServices from "../services/OrderServices";
+import ToastServices from "../services/ToastServices";
 
 
 export default function OrderItem(props){
     const updateStatus=e=>{
         OrderServices.updateOrder(props.id,e.target.value)
+        .then(()=>{
+            ToastServices.Success("AN ORDER HAS BEEN SUCCESSFULLY "+e.target.value)
+            props.removeOrder()
+        })
     }
     return(
         <MDBCol className="mx-1" xl={8} md={12}>

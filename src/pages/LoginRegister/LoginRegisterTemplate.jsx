@@ -12,11 +12,13 @@ import {
   import Login from "./Login";
   import ForgotPassword from './ForgotPassword';
   import './template.css';
+import UserServices from '../../services/UserServices';
 
   function App() {
-    const userJSON=sessionStorage.getItem("user")
-    if (userJSON!==null) {
-        switch (JSON.parse(userJSON).role) {
+    
+    if (sessionStorage.getItem("token")) {
+      const user=UserServices.getUserFromToken()
+        switch (user.role) {
           case "ADMIN":
             window.location.href="/admin"
             break;

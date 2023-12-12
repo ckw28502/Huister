@@ -1,5 +1,4 @@
 import { MDBBtn, MDBInput, MDBValidation, MDBValidationItem } from "mdb-react-ui-kit"
-import { FaCartShopping } from "react-icons/fa6"
 import PropertyServices from "../../services/PropertyServices";
 import { forwardRef,useImperativeHandle,useEffect,useState } from "react";
 
@@ -31,11 +30,11 @@ const OrderProperty=forwardRef(function orderProperty(props,ref){
     return(
         <MDBValidation className="px-5">
             <h1 className="mb-5">Order the property</h1>
-            <MDBValidationItem invalid feedback="Invalid price input">
-                <MDBInput name="price" min={1} onChange={e=>updateFormData(e)} type="number" value={formData.price}/>
+            <MDBValidationItem  invalid feedback="Invalid price input">
+                <MDBInput name="price" label="Price"min={1} onChange={e=>updateFormData(e)} type="number" value={formData.price}/>
             </MDBValidationItem>
             <MDBValidationItem invalid feedback="Invalid duration input">
-                <MDBInput name="duration" min={1} onChange={e=>updateFormData(e)} type="number" value={formData.duration}/>
+                <MDBInput name="duration" label="Durations in months" min={1} onChange={e=>updateFormData(e)} type="number" value={formData.duration}/>
             </MDBValidationItem>
         </MDBValidation>
     )

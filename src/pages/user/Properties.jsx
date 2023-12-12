@@ -1,6 +1,6 @@
 import { MDBBtn, MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit";
 import { useEffect, useRef, useState } from "react";
-import { FaCheck, FaCross, FaPlus } from "react-icons/fa";
+import { FaCheck, FaPlus } from "react-icons/fa";
 import PropertyServices from "../../services/PropertyServices";
 import Modal from "../../components/Modal";
 import PropertyCard from "../../components/PropertyCard";
@@ -16,16 +16,13 @@ import EditProperty from "./EditProperty";
 import OrderProperty from "./OrderProperty";
 import OrderServices from "../../services/OrderServices";
 import PropertyOrder from "./PropertyOrder";
+import WebSocketService from "../../services/WebSocketService";
 
 
 export default function Properties(){
     const user=UserServices.getUserFromToken()
 
     const [properties,setProperties]=useState([])
-
-    const [property,setProperty]=useState(null)
-
-    const [modalMode,setModalMode]=useState("detail")
 
     const sortOptions=[
         {label:"Price",value:'price'},
@@ -61,15 +58,30 @@ export default function Properties(){
     const [orders,setOrders]=useState([])
 
     const getOrders=()=>{
-        OrderServices.getAllOrders()
-        .then(data=>data.filter(order=>order.status=="CREATED"))
-        .then(createdOrders=>setOrders(createdOrders))
+        if(user.role!="ADMIN"){
+            OrderServices.getAllOrders()
+            .then(data=>data.filter(order=>order.status=="CREATED"))
+            .then(createdOrders=>setOrders(createdOrders))
+        }
     }
 
+
     useEffect(()=>{
+        if (user.role=="OWNER") {
+            WebSocketService.connect()
+            WebSocketService.subscribe("/order/"+user.id,newOrder=>{
+                setOrders(oldOrders=>[...oldOrders,newOrder])
+            })
+        }
+
         getProperties()
         getOrders()
+
+        return ()=>{
+            //WebSocketService.disconnect()
+        }
     },[])
+    
 
     const [propertyCards,setPropertyCards]=useState([])
 
@@ -104,6 +116,10 @@ export default function Properties(){
             const y=b.area
             return doSort(x,y)
         })
+    }
+
+    const removeOrder=(id)=>{
+        setOrders(orders.filter(order=>order.id!=id))
     }
 
     useEffect(()=>{
@@ -162,12 +178,9 @@ export default function Properties(){
                 setModalTitle("Order a property")
                 break
             case "DETAIL":{
-                const propertyOrders=orders.map(order=>{
-                    if (order.propertyId==id) {
-                        return order
-                    }
-                })
-                setModalBody(<PropertyOrder orders={propertyOrders.reverse()}/>)
+                const propertyOrders=orders.filter(order=>order.propertyId==id)
+                console.log(propertyOrders);
+                setModalBody(<PropertyOrder removeOrder={removeOrder} orders={propertyOrders.reverse()}/>)
                 setModalTitle("Order List")
                 setButton1(null)
                 setButton2(null)
@@ -202,7 +215,6 @@ export default function Properties(){
                 PropertyServices.updateProperty(propertyId,formData)
                 .then(()=>ToastServices.Success("Property Updated Successfully!"))
             } else if(formData.mode=="ORDER"){
-                console.log(formData);
                 OrderServices.createOrder(formData)
                 .then(()=>ToastServices.Success("Order successfully created!"));
                 
