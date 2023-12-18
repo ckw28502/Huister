@@ -12,7 +12,7 @@ function createOrder(formData) {
 }
 
 function updateOrder(id,status) {
-    return axiosInstance.put(`${hostName}/${id}`,{status})
+    return axiosInstance.put(`${hostName}/${id}`,{status:status})
 }
 
 export default {

@@ -4,14 +4,16 @@ import OrderItem from "../../components/OrderItem"
 
 const PropertyOrder=forwardRef(function PropertyOrder(props,ref){
     const [mappedOrders,setMappedOrders]=useState([])
+    const [orders,setOrders]=useState(props.orders)
 
     const removeOrder=id=>{
+        setOrders(orders.filter(order=>order.id!=id))
         props.removeOrder(id)
     }
 
     useEffect(()=>{
-        setMappedOrders(props.orders.map((order,index)=><OrderItem key={index} removeOrder={removeOrder} id={order.id} customerName={order.customerName} price={order.price}/>))
-    },[props.orders])
+        setMappedOrders(orders.map((order,index)=><OrderItem key={index} removeOrder={removeOrder} id={order.id} customerName={order.customerName} price={order.price}/>))
+    },[orders])
 
     return(
        <>

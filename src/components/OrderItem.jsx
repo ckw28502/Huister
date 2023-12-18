@@ -10,7 +10,7 @@ export default function OrderItem(props){
         OrderServices.updateOrder(props.id,e.target.value)
         .then(()=>{
             ToastServices.Success("AN ORDER HAS BEEN SUCCESSFULLY "+e.target.value)
-            props.removeOrder()
+            props.removeOrder(props.id)
         })
     }
     return(

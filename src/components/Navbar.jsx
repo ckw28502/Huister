@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import {
   MDBContainer,
   MDBNavbar,
@@ -16,11 +16,12 @@ import clickable from '../pages/clickable.module.css'
 import UserServices from '../services/UserServices';
 import { useNavigate } from 'react-router-dom';
 
-export default function Navbar(props) {
+const Navbar=forwardRef(function Navbar(props,ref) {
   const [showBasic, setShowBasic] = useState(false);
   let items;
   let setItems;
   const user=UserServices.getUserFromToken()
+  const [image,setImage]=useState(user.profilePictureUrl)
   const page=sessionStorage.getItem("page")
   if (user.role=='ADMIN') {
     [items,setItems]=useState([
@@ -54,6 +55,12 @@ export default function Navbar(props) {
     navigate('/')
   }
 
+  const reloadImage=()=>{
+    setImage("")
+  }
+
+  useImperativeHandle(ref,()=>({reloadImage}))
+
   const changePage=(name)=>{
     const newItems=items
     sessionStorage.setItem("page",name )
@@ -64,6 +71,12 @@ export default function Navbar(props) {
     setMappedItems(newItems.map((newItem)=><NavbarItem key={newItem.name} changePage={changePage} label={newItem.name} active={newItem.active}/>))
     props.switchPage(name);
   }
+
+  useEffect(()=>{
+    if (image=="" && user.role!="ADMIn") {
+      setImage(user.profilePictureUrl)
+    }
+  },[image])
   let [mappedItems,setMappedItems]=useState(items.map((item)=>{
     return <NavbarItem key={item.name} label={item.name} changePage={changePage} active={item.active}/>
   }))
@@ -91,7 +104,7 @@ export default function Navbar(props) {
             </MDBNavbarNav>
           </MDBCol>
           <MDBCol md="1" className='d-flex pe-3 m=lg-s-3 me-4'>
-          {(user.role!="ADMIN")?<img src={user.profilePictureUrl} style={{maxHeight:"50px",maxWidth:"50px", cursor:"pointer"}}name="userProfile" onClick={changePage} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
+          {(user.role!="ADMIN")?<img src={image} style={{maxHeight:"50px",maxWidth:"50px", cursor:"pointer"}}name="userProfile" onClick={changePage} className='my-3 img-fluid w-50 rounded-circle'/>:<></>}
           </MDBCol>
           <MDBCol md="1" >
             <FaSignOutAlt className={clickable.clickablePointer} onClick={LogOut} size={28}/>
@@ -102,4 +115,7 @@ export default function Navbar(props) {
       </MDBContainer>
     </MDBNavbar>
   );
-}
+})
+
+
+export default Navbar;

@@ -2,10 +2,13 @@ import { MDBBtn, MDBBtnGroup, MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-
 import { useEffect, useState } from "react";
 import OrderServices from "../../services/OrderServices";
 import OrderCard from "../../components/OrderCard";
+import Order from "../../models/Order";
+import UserServices from "../../services/UserServices";
+import WebSocketService from "../../services/WebSocketService";
 
 
 export default function CustomerDashboard(){
-    const [orders,setOrders]=useState([])
+    const [orders,setOrders]=useState(null)
     const [pendingColor,setPendingColor]=useState("primary")
     const [rejectedColor,setRejectedColor]=useState("secondary")
     const [acceptedColor,setAcceptedColor]=useState("secondary")
@@ -36,12 +39,12 @@ export default function CustomerDashboard(){
     }
 
     const updateOrder=tab=>{
-        setShowedOrders(orderConverter(orders.filter(order=>order.status==tab)))
+        setShowedOrders(orderConverter(orders.getOrders().filter(order=>order.status==tab)))
     }
 
     const cancelOrder=id=>{
-        const newOrders=orders.filter(order=>order.id!=id)
-        setOrders(newOrders)
+        orders.removeOrder(id)
+        updateOrder("CREATED")
     }
 
     const orderConverter=filteredOrders=>{
@@ -49,16 +52,21 @@ export default function CustomerDashboard(){
     }
 
     useEffect(()=>{
+        WebSocketService.connect()
         OrderServices.getAllOrders()
         .then(data=>{
-            setOrders(data)
+            setOrders(new Order(data))
             const pendingOrders=data.filter(order=>order.status=="CREATED")
             setShowedOrders(orderConverter(pendingOrders))
 
         })
     },[])
 
-    useEffect(()=>updateOrder("CREATED"),[orders])
+    useEffect(()=>{
+        if (orders) {
+            orders.subscribe(UserServices.getUserFromToken().id)
+        }
+    },[orders])
     
     return(
         <MDBContainer fluid className="mx-3">

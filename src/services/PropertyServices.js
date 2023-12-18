@@ -1,3 +1,4 @@
+import { date } from "yup"
 import axiosInstance from "./AxiosService"
 
 const hostName="properties"
@@ -24,6 +25,7 @@ function deleteProperty(id){
 
 function createProperty(formData) {
     return axiosInstance.post(`${hostName}`,formData)
+    .then(response=>response.data)
 }
 function updateProperty(id,formData) {
     return axiosInstance.put(`${hostName}/${id}`,formData)

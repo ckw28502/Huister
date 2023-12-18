@@ -16,6 +16,7 @@ import EditProperty from "./EditProperty";
 import OrderProperty from "./OrderProperty";
 import OrderServices from "../../services/OrderServices";
 import PropertyOrder from "./PropertyOrder";
+import Order from "../../models/Order";
 import WebSocketService from "../../services/WebSocketService";
 
 
@@ -55,27 +56,29 @@ export default function Properties(){
         .then(cityArr=>setCityFilterOptions(cityFilterOptions.concat(cityArr)))
     }
 
-    const [orders,setOrders]=useState([])
-
+    const [orders,setOrders]=useState(null)
     const getOrders=()=>{
         if(user.role!="ADMIN"){
             OrderServices.getAllOrders()
             .then(data=>data.filter(order=>order.status=="CREATED"))
-            .then(createdOrders=>setOrders(createdOrders))
+            .then(createdOrders=>setOrders(new Order(createdOrders)))
         }
     }
 
+    useEffect(()=>{
+        if (orders) {
+            orders.subscribe(user.id)
+            console.log(orders);
+        }
+    },[orders])
 
     useEffect(()=>{
+        getProperties()
         if (user.role=="OWNER") {
             WebSocketService.connect()
-            WebSocketService.subscribe("/order/"+user.id,newOrder=>{
-                setOrders(oldOrders=>[...oldOrders,newOrder])
-            })
+            getOrders()
+            
         }
-
-        getProperties()
-        getOrders()
 
         return ()=>{
             //WebSocketService.disconnect()
@@ -119,7 +122,8 @@ export default function Properties(){
     }
 
     const removeOrder=(id)=>{
-        setOrders(orders.filter(order=>order.id!=id))
+        console.log(id);
+        orders.removeOrder(id)
     }
 
     useEffect(()=>{
@@ -178,7 +182,7 @@ export default function Properties(){
                 setModalTitle("Order a property")
                 break
             case "DETAIL":{
-                const propertyOrders=orders.filter(order=>order.propertyId==id)
+                const propertyOrders=orders.getOrders().filter(order=>order.propertyId==id)
                 console.log(propertyOrders);
                 setModalBody(<PropertyOrder removeOrder={removeOrder} orders={propertyOrders.reverse()}/>)
                 setModalTitle("Order List")
@@ -205,15 +209,28 @@ export default function Properties(){
                 .then(downloadUrl=>{
                     formData.imageUrl=downloadUrl
                     PropertyServices.createProperty(formData)
-                    .then(()=>ToastServices.Success("Property Created Successfully!!!"))
+                    .then(data=>{
+                        ToastServices.Success("Property Created Successfully!!!")
+                        setProperties([...properties,data])
+                    })
                     
                 })
             }else if(formData.mode=="EDIT"){
+
                 if(formData.image){
                     FirebaseServices.uploadImage(formData.image,"/property/"+formData.streetName+"-"+formData.houseNumber)
                 }
+
                 PropertyServices.updateProperty(propertyId,formData)
-                .then(()=>ToastServices.Success("Property Updated Successfully!"))
+                .then(()=>{
+                    ToastServices.Success("Property Updated Successfully!")
+                    setProperties(properties.map(property=>{
+                        if (property.id==formData.id) {
+                            return formData
+                        }
+                        return property
+                    }))
+                })
             } else if(formData.mode=="ORDER"){
                 OrderServices.createOrder(formData)
                 .then(()=>ToastServices.Success("Order successfully created!"));
@@ -222,8 +239,12 @@ export default function Properties(){
         }else{
             //Delete
             PropertyServices.deleteProperty(propertyId)
-            .then(()=>ToastServices.Success("Property Deleted Successfully!"))
-            .then(()=>getProperties())
+            .then(()=>{
+                ToastServices.Success("Property Deleted Successfully!")
+                const newProperties=properties.filter(property=>property.id!=propertyId)
+                console.log(newProperties);
+                setProperties(newProperties)
+            })
             .catch(()=>ToastServices.Error("Internal Server Error!"));
         }
         getProperties()

@@ -1,6 +1,6 @@
 import { MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardText, MDBCardTitle, MDBCol, MDBRow } from "mdb-react-ui-kit";
 import { useEffect, useState } from "react";
-import { FaBell, FaEdit, FaEuroSign, FaInfo, FaTrash } from "react-icons/fa";
+import { FaBell, FaEdit, FaEuroSign, FaTrash } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 
 export default function PropertyCard(props) {
@@ -36,6 +36,7 @@ export default function PropertyCard(props) {
     }else if(props.role=="CUSTOMER"){
         buttons=(<MDBBtn color="primary" className="ps-4 my-5 mx-2" onClick={()=>props.openModal(props.property.id,"ORDER")}><FaCartShopping size={28}/></MDBBtn>)
     }
+    
 
     return(
         <MDBCard style={{ maxWidth: '540px' }} className=" mx-5 my-3">

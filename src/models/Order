@@ -1,0 +1,52 @@
+import WebSocketService from "../services/WebSocketService";
+
+export default class Order{
+    constructor(orders){
+        this.orders=orders;
+    }
+
+    subscribe(target){
+        const stompClient=WebSocketService.getStompClient()
+        if (stompClient) {
+            stompClient.connect({},()=>{
+                stompClient.subscribe(`/notifications/order/`+target,orderJson=>{
+                    const newOrder=JSON.parse(orderJson.body)
+                    switch (newOrder.status) {
+                        case "CREATED":
+                            this.orders.push(newOrder)
+                            break;
+                        case "CANCELLED":
+                            this.removeOrder(newOrder.id)
+                            break
+                        case "ACCEPTED" :
+                            this.changeStatus(newOrder.id,newOrder.propertyId,newOrder.status)
+                            break
+                        case "REJECTED" :
+                            this.changeStatus(newOrder.id,newOrder.propertyId,newOrder.status)
+                            break
+                        default:
+                            break;
+                    }
+                })
+            })
+        }
+    }
+
+    removeOrder(id){
+        this.orders=this.orders.filter(order=>order.id!=id)
+    }
+
+    changeStatus(id,propertyId,status){
+        this.orders.forEach(order=>{
+            if (order.id==id) {
+                order.status=status
+            }else if (order.propertyId==propertyId) {
+                order.status="REJECTED"
+            }
+        })
+    }
+
+    getOrders(){
+        return this.orders
+    }
+}

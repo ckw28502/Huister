@@ -5,7 +5,7 @@ import { FaCamera, FaSave } from "react-icons/fa";
 import ToastServices from "../../services/ToastServices";
 import FirebaseServices from "../../services/FirebaseServices";
 
-export default function UserProfile(){
+export default function UserProfile(props){
     const [user,setUser]=useState({
         id:0,
         role:"",
@@ -64,6 +64,7 @@ export default function UserProfile(){
         if (validate) {
             if (user.profilePicture) {
                 FirebaseServices.uploadImage(user.profilePicture,"user/"+user.username)
+                .then(()=>props.profilePictureUpload())
             }
             UserServices.updateUser({
                 name:user.name,
