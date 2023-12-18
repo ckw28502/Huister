@@ -1,3 +1,4 @@
+import ToastServices from "../services/ToastServices";
 import WebSocketService from "../services/WebSocketService";
 
 export default class Order{
@@ -17,12 +18,15 @@ export default class Order{
                             break;
                         case "CANCELLED":
                             this.removeOrder(newOrder.id)
+                            ToastServices.Info("A RENT ORDER HAS BEEN CANCELLED\nCLOSE THE MODAL TO SEE THE CHANGE")
                             break
                         case "ACCEPTED" :
                             this.changeStatus(newOrder.id,newOrder.propertyId,newOrder.status)
+                            ToastServices.Info("A RENT ORDER HAS BEEN ACCEPTED\nOPEN YOUR DASHBOARD TO SEE IT")
                             break
                         case "REJECTED" :
                             this.changeStatus(newOrder.id,newOrder.propertyId,newOrder.status)
+                            ToastServices.Info("A RENT ORDER HAS BEEN REJECTED\nOPEN YOUR DASHBOARD TO SEE IT")
                             break
                         default:
                             break;
@@ -33,6 +37,7 @@ export default class Order{
     }
 
     removeOrder(id){
+        console.log(id);
         this.orders=this.orders.filter(order=>order.id!=id)
     }
 

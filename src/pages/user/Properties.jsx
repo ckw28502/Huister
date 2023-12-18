@@ -179,13 +179,13 @@ export default function Properties(){
                 break
             case "ORDER":
                 setModalBody(<OrderProperty propertyId={id} ownerId={user.id} ref={childRef}/>)
-                setModalTitle("Order a property")
+                setModalTitle("Rent a property")
                 break
             case "DETAIL":{
                 const propertyOrders=orders.getOrders().filter(order=>order.propertyId==id)
                 console.log(propertyOrders);
                 setModalBody(<PropertyOrder removeOrder={removeOrder} orders={propertyOrders.reverse()}/>)
-                setModalTitle("Order List")
+                setModalTitle("Rent orders List")
                 setButton1(null)
                 setButton2(null)
                 break;
@@ -233,7 +233,7 @@ export default function Properties(){
                 })
             } else if(formData.mode=="ORDER"){
                 OrderServices.createOrder(formData)
-                .then(()=>ToastServices.Success("Order successfully created!"));
+                .then(()=>ToastServices.Success("Rent successfully sent!"));
                 
             }
         }else{
@@ -242,7 +242,6 @@ export default function Properties(){
             .then(()=>{
                 ToastServices.Success("Property Deleted Successfully!")
                 const newProperties=properties.filter(property=>property.id!=propertyId)
-                console.log(newProperties);
                 setProperties(newProperties)
             })
             .catch(()=>ToastServices.Error("Internal Server Error!"));

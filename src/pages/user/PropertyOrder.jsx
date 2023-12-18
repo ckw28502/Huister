@@ -15,9 +15,13 @@ const PropertyOrder=forwardRef(function PropertyOrder(props,ref){
         setMappedOrders(orders.map((order,index)=><OrderItem key={index} removeOrder={removeOrder} id={order.id} customerName={order.customerName} price={order.price}/>))
     },[orders])
 
+    useEffect(()=>{
+        setOrders(props.orders)
+    },[props.orders])
+
     return(
        <>
-            <h2>ALL ORDERS</h2>
+            <h2>ALL ORDER RENTS</h2>
             {mappedOrders}
 
        </>

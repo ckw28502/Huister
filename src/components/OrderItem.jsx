@@ -18,7 +18,7 @@ export default function OrderItem(props){
             <MDBListGroupItem style={{cursor:"pointer"}} className='d-flex border-dark border border-5 rounded-pill bg-light justify-content-between align-items-center px-4 mx-1 mb-3 container-fluid min-w-100'>
                 <div className='d-flex align-items-center'>
                 <div className='ms-3 mt-2 px-4 d-flex flex-column align-items-center'>
-                    <p className='fw-bold mb-1 h6'>{props.customerName} want to order this property</p>
+                    <p className='fw-bold mb-1 h6'>{props.customerName} want to rent this property</p>
                     <p className='fw-bold mb-1 h6'><FaEuroSign className="mb-1"/>for {props.price}/month</p>
                     <div>
                         <MDBBtn color="danger" onClick={e=>updateStatus(e)} value={"REJECTED"} className="mx-5 mb-3 mt-1"><FaX/></MDBBtn>

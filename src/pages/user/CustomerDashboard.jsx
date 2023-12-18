@@ -56,8 +56,6 @@ export default function CustomerDashboard(){
         OrderServices.getAllOrders()
         .then(data=>{
             setOrders(new Order(data))
-            const pendingOrders=data.filter(order=>order.status=="CREATED")
-            setShowedOrders(orderConverter(pendingOrders))
 
         })
     },[])
@@ -65,8 +63,10 @@ export default function CustomerDashboard(){
     useEffect(()=>{
         if (orders) {
             orders.subscribe(UserServices.getUserFromToken().id)
+            updateOrder("CREATED")
         }
     },[orders])
+
     
     return(
         <MDBContainer fluid className="mx-3">

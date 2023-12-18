@@ -10,12 +10,10 @@ function connect(){
     }
 }
 
-
-
-
 function disconnect(){
     if (stompClient) {
-        stompClient.disconnect();
+        stompClient.deactivate( );
+        stompClient=null;
     }
 }
 
