@@ -107,7 +107,7 @@ export default function ChangePassword(){
           <MDBCol sm='6'>
             <Logo/>
   
-            <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
+            <div className='d-flex flex-column h-custom-2 w-75 pt-4'>
   
               <h3 className="fw-normal align-self-center mb-2 ps-5 ms-3 pb-3" style={{letterSpacing: '1px'}}>Create new password</h3>
   
@@ -123,7 +123,7 @@ export default function ChangePassword(){
                 </div>
 
                 {/** Confirmation password input */}
-                <MDBValidationItem className='mb-3 pb-5'invalid feedback='Confirmation password has to be equals to password!'>
+                <MDBValidationItem className='pb-5'invalid feedback='Confirmation password has to be equals to password!'>
                   <InputPassword id="registerConfirmationPassword" name="confirmationPassword" label="Confirmation Password" getValue={confirmationPasswordChecker} />
                 </MDBValidationItem>
                 <MDBBtn type="submit" color="primary" className="w-50 align-self-center ms-5" size="lg">Submit</MDBBtn>

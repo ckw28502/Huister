@@ -30,7 +30,6 @@ axiosInstance.interceptors.response.use(
         if (error.response.status==401) {
             originalConfig._retry=true;
             const oldToken=JSON.parse(sessionStorage.getItem("token"))
-            sessionStorage.removeItem("token")
             try{
                 const refreshTokenPromise=await axios.post(hostName+"users/token",{
                     token:oldToken
