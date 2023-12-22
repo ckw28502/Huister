@@ -19,7 +19,11 @@ const EditProperty=forwardRef(function CreateProperty(props,ref){
 
     useEffect(()=>{
         PropertyServices.getProperty(props.propertyId)
-        .then(data=>setFormData(data))
+        .then(data=>{
+            const fetchedProperty=data
+            fetchedProperty.mode="EDIT"
+            setFormData(fetchedProperty)
+        })
     },[])
 
     const handleSubmit=()=>{

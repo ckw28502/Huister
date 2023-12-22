@@ -1,23 +1,82 @@
-import { MDBContainer } from "mdb-react-ui-kit";
+import { MDBBtn, MDBBtnGroup, MDBCol, MDBContainer, MDBRow } from "mdb-react-ui-kit";
 import { useEffect, useState } from "react";
 import OrderServices from "../../services/OrderServices";
 import OrderCard from "../../components/OrderCard";
+import Order from "../../models/Order";
+import UserServices from "../../services/UserServices";
+import WebSocketService from "../../services/WebSocketService";
 
 
 export default function CustomerDashboard(){
-    const user=JSON.parse(sessionStorage.getItem("user"))
-    const [rentedOrder,setRentedOrder]=useState([])
+    const [orders,setOrders]=useState(null)
+    const [pendingColor,setPendingColor]=useState("primary")
+    const [rejectedColor,setRejectedColor]=useState("secondary")
+    const [acceptedColor,setAcceptedColor]=useState("secondary")
+    const [showedOrders,setShowedOrders]=useState([])
+
+    const changeTab=tab=>{
+        switch (tab) {
+            case "CREATED":
+                setPendingColor("primary")
+                setRejectedColor("secondary")
+                setAcceptedColor("secondary")
+                break;
+            case "REJECTED":
+                setPendingColor("secondary")
+                setRejectedColor("primary")
+                setAcceptedColor("secondary")
+                break;
+            case "ACCEPTED":
+                setPendingColor("secondary")
+                setRejectedColor("secondary")
+                setAcceptedColor("primary")
+                break;
+            default:
+                break;
+        }
+        updateOrder(tab)
+        
+    }
+
+    const updateOrder=tab=>{
+        setShowedOrders(orderConverter(orders.getOrders().filter(order=>order.status==tab)))
+    }
+
+    const cancelOrder=id=>{
+        orders.removeOrder(id)
+        updateOrder("CREATED")
+    }
+
+    const orderConverter=filteredOrders=>{
+        return filteredOrders.map((order,index)=><OrderCard order={order} cancelOrder={()=>cancelOrder(order.id)} key={index}/>)
+    }
 
     useEffect(()=>{
+        WebSocketService.connect()
         OrderServices.getAllOrders()
-        .then(data=>data.filter(order=>order.status=="ACCEPTED"))
-        .then(acceptedOrders=>setRentedOrder(acceptedOrders.map((order,index)=><OrderCard order={order} key={index} isAccepted={true}/> )))
+        .then(data=>{
+            setOrders(new Order(data))
+
+        })
     },[])
+
+    useEffect(()=>{
+        if (orders) {
+            orders.subscribe(UserServices.getUserFromToken().id)
+            updateOrder("CREATED")
+        }
+    },[orders])
+
     
     return(
-        <MDBContainer fluid>
-            <h1>Property you succesfully get!!!</h1>
-            {rentedOrder}
+        <MDBContainer fluid className="mx-3">
+            <h1>Your Orders</h1>
+            <MDBBtnGroup className="my-5">
+                <MDBBtn color={pendingColor} onClick={e=>changeTab(e.target.value)} value="CREATED">PENDING</MDBBtn>
+                <MDBBtn color={rejectedColor} onClick={e=>changeTab(e.target.value)} value="REJECTED">REJECTED</MDBBtn>
+                <MDBBtn color={acceptedColor} onClick={e=>changeTab(e.target.value)} value="ACCEPTED">ACCEPTED</MDBBtn>
+            </MDBBtnGroup>
+            <MDBRow className="mx-5">{showedOrders}</MDBRow>
         </MDBContainer>
     )
 }

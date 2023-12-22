@@ -38,9 +38,7 @@ function Modal(props) {
               {props.body}
             </MDBModalBody>
             <MDBModalFooter>
-              <MDBBtn color='danger' onClick={toggleModal}>
-                {props.button1}
-              </MDBBtn>
+              {(props.button1)?(<MDBBtn color='danger' onClick={toggleModal}>{props.button1}</MDBBtn>):(<></>)}
               {(props.button2)?(<MDBBtn onClick={Accept}>{props.button2}</MDBBtn>):(<></>)}
             </MDBModalFooter>
           </MDBModalContent>

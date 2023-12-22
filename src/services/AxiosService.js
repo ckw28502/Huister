@@ -1,7 +1,8 @@
 import axios from "axios";
 
+const hostName=import.meta.env.VITE_HUISTER_API_URL
 const axiosInstance=axios.create({
-    baseURL:import.meta.env.VITE_HUISTER_API_URL,
+    baseURL:hostName,
     headers:{
         "Content-Type":"application/json"
     }
@@ -26,13 +27,12 @@ axiosInstance.interceptors.response.use(
     },
     async (error)=>{
         const originalConfig=error.config;
-        console.log(error.response.data.status);
-        if (error.response.data.status==401) {
+        if (error.response.status==401) {
             originalConfig._retry=true;
-
+            const oldToken=JSON.parse(sessionStorage.getItem("token"))
             try{
-                const refreshTokenPromise=await axiosInstance.post("users/token",{
-                    token:JSON.parse(sessionStorage.getItem("token"))
+                const refreshTokenPromise=await axios.post(hostName+"users/token",{
+                    token:oldToken
                 })
     
                 const {token}=refreshTokenPromise.data;

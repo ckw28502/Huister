@@ -29,14 +29,13 @@ export default function ActivateAccount(){
           <MDBCol sm='6'>
             <Logo/>
   
-            <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
+            <div className='d-flex flex-column justify-content-center w-75 pt-4'>
   
               <h3 className="fw-normal align-self-center mb-2 ps-5 ms-3 pb-3" style={{letterSpacing: '1px'}}>Your Account Has been Activated</h3>
   
-              <h2>Redirecting to Login page in ....</h2>
-              <h1>{countDown}</h1>
-  
-            </div>
+                <h2 className="align-self-center">Redirecting to Login page in ....</h2>
+                <h1 className="align-self-center">{countDown}</h1>
+              </div>
   
           </MDBCol>
   

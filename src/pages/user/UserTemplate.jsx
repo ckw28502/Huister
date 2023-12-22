@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../../components/Navbar";
 import AdminDashboard from './AdminDashboard';
 import Properties from './Properties';
@@ -8,8 +8,10 @@ import CustomerDashboard from "./CustomerDashboard";
 import UserProfile from "./UserProfile";
 import UserServices from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
+import WebSocketService from "../../services/WebSocketService";
 
 export default function UserTemplate(){
+    const childRef=useRef()
     const [currentPage,setCurrentPage]=useState(sessionStorage.getItem("page"));
     const navigate=useNavigate()
     const user=useState(UserServices.getUserFromToken())[0]
@@ -18,7 +20,13 @@ export default function UserTemplate(){
     }
     const switchPage=()=>{
         setCurrentPage(sessionStorage.getItem("page"))
+        WebSocketService.disconnect()
     }
+
+    const profilePictureUpload=()=>{
+        childRef.current.reloadImage()
+    }
+
     const checkUserRoleForDashboard=()=>{
         switch (user.role) {
             case 'ADMIN':
@@ -44,13 +52,14 @@ export default function UserTemplate(){
                 setPageObject(<Owners/>)
                 break;
             default:
-                setPageObject(<UserProfile/>)
+                setPageObject(<UserProfile profilePictureUpload={profilePictureUpload}/>)
                 break;
         }
-    },[currentPage])    
+    },[currentPage])
+    
     return(
         <>
-            <Navbar switchPage={switchPage}/>
+            <Navbar switchPage={switchPage} ref={childRef}/>
             <main className="d-flex justify-content-center mt-5">
                 {pageObject}
             </main>
