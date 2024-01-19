@@ -23,7 +23,7 @@ function Modal(props) {
   }
   return (
     <>
-      <MDBModal show={modal} tabIndex='-1'>
+      <MDBModal staticBackdrop show={modal} tabIndex='-1'>
         <MDBModalDialog size="lg" scrollable={props.scrollable}>
           <MDBModalContent>
             <MDBModalHeader>
@@ -39,7 +39,7 @@ function Modal(props) {
             </MDBModalBody>
             <MDBModalFooter>
               {(props.button1)?(<MDBBtn color='danger' onClick={toggleModal}>{props.button1}</MDBBtn>):(<></>)}
-              {(props.button2)?(<MDBBtn onClick={Accept}>{props.button2}</MDBBtn>):(<></>)}
+              {(props.button2)?(<MDBBtn id='btnModal2' onClick={Accept}>{props.button2}</MDBBtn>):(<></>)}
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import UserServices from "../../services/UserServices"
-import { MDBCol, MDBContainer } from "mdb-react-ui-kit"
+import { MDBBtn, MDBCol, MDBContainer } from "mdb-react-ui-kit"
 import { FaEnvelope, FaPhone } from "react-icons/fa"
+import ToastServices from "../../services/ToastServices"
 
 
 export default function UserDetails(props){
@@ -35,7 +36,6 @@ export default function UserDetails(props){
                 <h3 className="d-flex justify-content-center mb-2 ">{user.name}</h3>
                 <h5 className="d-flex justify-content-center me-3"><FaEnvelope className="me-3"/>{user.email}</h5>
                 <h5 className="d-flex justify-content-center me-3"><FaPhone className="me-3"/>{user.phoneNumber}</h5>
-
             </MDBCol>
         </MDBContainer>
     )

@@ -49,14 +49,18 @@ export default function Properties(){
     const getProperties=()=>{
         PropertyServices.getAllProperties()
         .then(data=>setProperties(data))
+        const newCities=[
+            {label:"All Cities",value:'0'}
+        ]
         CityServices.getAllCities()
         .then(data=>data.cities.map(datum=>{
             return {label:datum.name,value:datum.id}
         }))
-        .then(cityArr=>setCityFilterOptions(cityFilterOptions.concat(cityArr)))
+        .then(cityArr=>setCityFilterOptions(newCities.concat(cityArr)))
     }
 
     const [orders,setOrders]=useState(null)
+
     const getOrders=()=>{
         if(user.role!="ADMIN"){
             OrderServices.getAllOrders()
@@ -68,20 +72,14 @@ export default function Properties(){
     useEffect(()=>{
         if (orders) {
             orders.subscribe(user.id)
-            console.log(orders);
         }
     },[orders])
 
     useEffect(()=>{
         getProperties()
         if (user.role=="OWNER") {
-            WebSocketService.connect()
             getOrders()
             
-        }
-
-        return ()=>{
-            //WebSocketService.disconnect()
         }
     },[])
     
@@ -183,7 +181,6 @@ export default function Properties(){
                 break
             case "DETAIL":{
                 const propertyOrders=orders.getOrders().filter(order=>order.propertyId==id)
-                console.log(propertyOrders);
                 setModalBody(<PropertyOrder removeOrder={removeOrder} orders={propertyOrders.reverse()}/>)
                 setModalTitle("Rent orders List")
                 setButton1(null)
@@ -191,7 +188,7 @@ export default function Properties(){
                 break;
             }
             default:
-                null
+                setModalBody(null)
                 break;
         }
         setModal(!modal)
@@ -268,7 +265,7 @@ export default function Properties(){
                     </MDBRow>
                     <MDBRow className="my-5">
                         <MDBCol size='1'>
-                            {(user.role=="OWNER")?<MDBBtn onClick={()=>toggleModal(0,"CREATE")}className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
+                            {(user.role=="OWNER")?<MDBBtn id="addButton" onClick={()=>toggleModal(0,"CREATE")}className="mx-2 py-3 mb-3"color="primary"><FaPlus size={18}/></MDBBtn>:<></>}
                         </MDBCol>
                     </MDBRow>
                 </MDBRow>

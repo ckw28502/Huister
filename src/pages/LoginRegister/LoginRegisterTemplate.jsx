@@ -6,7 +6,7 @@ import {
   from 'mdb-react-ui-kit';
   import Banner from './Banner';
   import Logo from './Logo';
-  import './LoginRegister.css'
+  import './loginregister.css';
   import { useState } from 'react';
   import Register from './Register';
   import Login from "./Login";

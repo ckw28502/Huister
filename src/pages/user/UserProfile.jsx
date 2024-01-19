@@ -75,6 +75,12 @@ export default function UserProfile(props){
             })
         }
 
+        
+
+    }
+     const forgotPassword=()=>{
+        UserServices.forgotPassword(user.username)
+        .then(()=>ToastServices.Success("Change password link has been sent to your email!"))
     }
 
     return(
@@ -103,8 +109,11 @@ export default function UserProfile(props){
                         <MDBValidationItem className="my-5" feedback="Not a valid dutch phone number!" invalid>
                             <MDBInput wrapperClass="my-3" required onChange={e=>phoneNumberChecker(e)} name="phoneNumber" value={user.phoneNumber}  label="Phone Number"/>
                         </MDBValidationItem>
-                        <MDBBtn className="w-25 align-self-center"><FaSave size={36}/></MDBBtn>
+                        <MDBBtn className="w-100 align-self-center"><FaSave size={36}/></MDBBtn>
                     </MDBValidation>
+
+                    <MDBBtn className="my-5 py-3" onClick={forgotPassword}>Change your password here    </MDBBtn>
+
                 </MDBRow>
             </MDBCol>
         </MDBContainer>
