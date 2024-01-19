@@ -24,7 +24,7 @@ const EditProperty=forwardRef(function CreateProperty(props,ref){
             fetchedProperty.mode="EDIT"
             setFormData(fetchedProperty)
         })
-    },[])
+    },[props.id])
 
     const handleSubmit=()=>{
         return formData

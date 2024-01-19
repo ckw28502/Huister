@@ -4,7 +4,6 @@ import OrderServices from "../../services/OrderServices";
 import OrderCard from "../../components/OrderCard";
 import Order from "../../models/Order";
 import UserServices from "../../services/UserServices";
-import WebSocketService from "../../services/WebSocketService";
 
 
 export default function CustomerDashboard(){
@@ -39,6 +38,7 @@ export default function CustomerDashboard(){
     }
 
     const updateOrder=tab=>{
+        console.log(orders.getOrders());
         setShowedOrders(orderConverter(orders.getOrders().filter(order=>order.status==tab)))
     }
 
@@ -51,13 +51,12 @@ export default function CustomerDashboard(){
         return filteredOrders.map((order,index)=><OrderCard order={order} cancelOrder={()=>cancelOrder(order.id)} key={index}/>)
     }
 
+
     useEffect(()=>{
-        WebSocketService.connect()
         OrderServices.getAllOrders()
         .then(data=>{
             setOrders(new Order(data))
-
-        })
+        }).then()
     },[])
 
     useEffect(()=>{

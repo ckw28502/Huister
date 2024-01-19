@@ -1,7 +1,7 @@
 import { MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardText, MDBCardTitle, MDBCol, MDBRow } from "mdb-react-ui-kit";
 import { useEffect, useState } from "react";
 import { FaBell, FaEdit, FaEuroSign, FaTrash } from "react-icons/fa";
-import { FaCartShopping } from "react-icons/fa6";
+import { FaHouseCircleCheck } from "react-icons/fa6";
 
 export default function PropertyCard(props) {
     const [counter,setCounter]=useState(0);
@@ -25,8 +25,8 @@ export default function PropertyCard(props) {
     let buttons;
     if (props.role=="OWNER") {
         buttons=(<>
-            <MDBBtn color="warning" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"EDIT")}><FaEdit size={28}/></MDBBtn>
-            <MDBBtn color="danger" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"DELETE")}><FaTrash size={28}/></MDBBtn>
+            <MDBBtn id={`edit_property_${props.property.id}`} color="warning" className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"EDIT")}><FaEdit size={28}/></MDBBtn>
+            <MDBBtn color="danger" id={`delete_property_${props.property.id}`} className="px-3 my-3 mx-3" onClick={()=>props.openModal(props.property.id,"DELETE")}><FaTrash size={28}/></MDBBtn>
 
             <div>
             {notification}
@@ -34,7 +34,7 @@ export default function PropertyCard(props) {
             </div>
         </>)
     }else if(props.role=="CUSTOMER"){
-        buttons=(<MDBBtn color="primary" className="ps-4 my-5 mx-2" onClick={()=>props.openModal(props.property.id,"ORDER")}><FaCartShopping size={28}/></MDBBtn>)
+        buttons=(<MDBBtn  color="primary" id={`order_property_${props.property.id}`} className="ps-4 my-5" onClick={()=>props.openModal(props.property.id,"ORDER")}><FaHouseCircleCheck size={28}/><br/>RENT</MDBBtn>)
     }
     
 

@@ -15,6 +15,7 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import clickable from '../pages/clickable.module.css'
 import UserServices from '../services/UserServices';
 import { useNavigate } from 'react-router-dom';
+import WebSocketService from '../services/WebSocketService';
 
 const Navbar=forwardRef(function Navbar(props,ref) {
   const [showBasic, setShowBasic] = useState(false);
@@ -36,22 +37,33 @@ const Navbar=forwardRef(function Navbar(props,ref) {
             active:page=='Owners'
         }
       ])
-  } else {
+  } else if (user.role=='OWNER'){
     [items,setItems]=useState([
         {
-            name:'Dashboard',
-            active:page=='Dashboard'
-        },{
             name:'Properties',
             active:page=='Properties'
-        }
+        },{
+          name:'Report',
+          active:page=='Report'
+      }
       ])
+  }else{
+    [items,setItems]=useState([
+      {
+          name:'Properties',
+          active:page=='Properties'
+      },{
+        name:'Rents',
+        active:page=='Rents'
+    }
+    ])
   }
 
   const navigate=useNavigate()
 
   const LogOut=()=>{
     UserServices.Logout()
+    WebSocketService.disconnect()
     navigate('/')
   }
 
@@ -62,6 +74,7 @@ const Navbar=forwardRef(function Navbar(props,ref) {
   useImperativeHandle(ref,()=>({reloadImage}))
 
   const changePage=(name)=>{
+    console.log(name);
     const newItems=items
     sessionStorage.setItem("page",name )
     newItems.map((item)=>{
@@ -73,7 +86,7 @@ const Navbar=forwardRef(function Navbar(props,ref) {
   }
 
   useEffect(()=>{
-    if (image=="" && user.role!="ADMIn") {
+    if (image=="" && user.role!="ADMIN") {
       setImage(user.profilePictureUrl)
     }
   },[image])

@@ -3,12 +3,11 @@ import Navbar from "../../components/Navbar";
 import AdminDashboard from './AdminDashboard';
 import Properties from './Properties';
 import Owners from './Owners';
-import OwnerDashboard from "./OwnerDashBoard";
 import CustomerDashboard from "./CustomerDashboard";
+import OwnerDashboard from "./OwnerDashboard";
 import UserProfile from "./UserProfile";
 import UserServices from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
-import WebSocketService from "../../services/WebSocketService";
 
 export default function UserTemplate(){
     const childRef=useRef()
@@ -20,7 +19,6 @@ export default function UserTemplate(){
     }
     const switchPage=()=>{
         setCurrentPage(sessionStorage.getItem("page"))
-        WebSocketService.disconnect()
     }
 
     const profilePictureUpload=()=>{
@@ -39,10 +37,12 @@ export default function UserTemplate(){
                 break;
         }
     }
-    const [pageObject,setPageObject]=useState(checkUserRoleForDashboard())
+    const [pageObject,setPageObject]=useState(null)
     useEffect(()=>{
         switch (currentPage) {
             case 'Dashboard':
+            case 'Report':
+            case 'Rents':
                 setPageObject(checkUserRoleForDashboard());
                 break;
             case 'Properties':

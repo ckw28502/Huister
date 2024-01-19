@@ -37,10 +37,13 @@ function Login(props) {
 
         case "OWNER":
           navigate('/owner')
+          sessionStorage.setItem("page","Properties")
           break;
 
         case "CUSTOMER":
           navigate('/customer')
+          sessionStorage.setItem("page","Properties")
+
           break;
         default:
           break;

@@ -29,7 +29,7 @@ const OrderProperty=forwardRef(function orderProperty(props,ref){
 
     return(
         <MDBValidation className="px-5">
-            <h1 className="mb-5">Order the property</h1>
+            <h1 className="mb-5">Rent this property</h1>
             <MDBValidationItem  invalid feedback="Invalid price input">
                 <MDBInput name="price" label="Price"min={1} onChange={e=>updateFormData(e)} type="number" value={formData.price}/>
             </MDBValidationItem>

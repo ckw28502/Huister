@@ -140,22 +140,22 @@ function Register(props) {
   const handleRegister=event=>{
     event.preventDefault()
     const passwordfailed=passwordRequirements.some(passwordRequirement=>passwordRequirement.correct==false)
-
-    if(!phoneNumberRegex.test(formData.phoneNumber)){
+    if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
+      ToastServices.Error("There is an empty field!")
+    }else if(!phoneNumberRegex.test(formData.phoneNumber)){
       ToastServices.Error("Phone number is not a valid dutch phone number!")
     }else if (passwordfailed) {
       ToastServices.Error("Password requirements haven't been fulfilled!")
     }else if (formData.password!=formData.confirmationPassword){
       ToastServices.Error("Confirmation Password is not equals to the password!")
-    }else if(formData.name.length<1||formData.email.length<1||formData.username.length<1||formData.profilePictureUrl==null){
-      ToastServices.Error("There is an empty field!")
+    }else if(!termsConditions){
+      ToastServices.Error("Terms and conditions has not been accepted!")
     }else{
       FirebaseServices.uploadImage(formData.profilePicture,"user/"+formData.username)
       .then(downloadUrl=>{
-        //setFormData({...formData,["profilePictureUrl"]:downloadUrl})
         formData.profilePictureUrl=downloadUrl
         userservices.saveUser(formData)
-        .then(ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
+        .then(()=>ToastServices.Success("Succesfully registered! Check your email to activate your account!"))
         .catch(error=>{
           const errorMessages=error.response.data.properties.errors
           errorMessages.map(errorMessage=>ToastServices.Error(convertErrorMessage(errorMessage.error)))

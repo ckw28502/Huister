@@ -3,13 +3,11 @@ import { Doughnut } from "react-chartjs-2";
 import PropertyServices from "../../services/PropertyServices";
 import { useEffect, useState } from "react";
 import { ArcElement, Chart, Legend, Tooltip } from "chart.js";
-import UserServices from "../../services/UserServices";
 
 
 export default function AdminDashboard(){
     Chart.register(ArcElement, Tooltip, Legend);
 
-    const user=UserServices.getUserFromToken();
     const [rentedRatio,setRentedRatio]=useState({rented:0,notRented:0})
 
     useEffect(()=>{
